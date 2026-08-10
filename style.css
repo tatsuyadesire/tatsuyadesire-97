@@ -1,3 +1,4 @@
+    /* Variáveis globais de cores, dimensões e tipografia utilizadas em toda a interface. */
 :root {
       --bg: #0b1020;
       --panel: #24233d;
@@ -18,6 +19,7 @@
 
     * { box-sizing: border-box; }
     html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    /* Define a aparência geral da página e o fundo em camadas do desktop. */
     body {
       font-family: var(--font-ui);
       color: var(--ink);
@@ -30,6 +32,7 @@
       user-select: none;
     }
 
+    /* Adiciona uma textura sutil sobre toda a tela para reforçar o aspecto retrô. */
     body::before {
       content: "";
       position: fixed;
@@ -44,6 +47,7 @@
       z-index: 9998;
     }
 
+    /* Simula linhas horizontais de monitor CRT sobre a interface. */
     body::after {
       content: "";
       position: fixed;
@@ -59,6 +63,7 @@
       );
     }
 
+    /* Área principal do sistema, descontando o espaço ocupado pela barra de tarefas. */
     .desktop {
       position: absolute;
       inset: 0 0 var(--taskbar-h) 0;
@@ -68,6 +73,7 @@
         transparent;
     }
 
+    /* Camada que recebe as estrelas criadas dinamicamente pelo JavaScript. */
     .stars {
       position: absolute;
       inset: 0;
@@ -75,6 +81,7 @@
       overflow: hidden;
     }
 
+    /* Aparência individual das estrelas e sua animação de brilho. */
     .star {
       position: absolute;
       width: 2px;
@@ -88,6 +95,7 @@
       50% { opacity: .25; transform: scale(.8); }
     }
 
+    /* Névoas decorativas animadas que se movimentam lentamente pelo desktop. */
     .mist {
       position: absolute;
       width: 340px;
@@ -105,6 +113,7 @@
       to { transform: translate(70px, 26px); }
     }
 
+    /* Título decorativo exibido ao fundo do desktop. */
     .wallpaper-title {
       position: absolute;
       right: 4vw;
@@ -117,6 +126,7 @@
     .wallpaper-title h1 { margin: 0; font-size: clamp(42px, 8vw, 120px); letter-spacing: -6px; }
     .wallpaper-title p { margin: -8px 8px 0 0; font-size: 12px; letter-spacing: 4px; }
 
+    /* Organiza os atalhos do desktop em uma grade. */
     .desktop-icons {
       position: absolute;
       top: 14px;
@@ -127,6 +137,7 @@
       z-index: 3;
     }
 
+    /* Aparência e comportamento visual de cada ícone do desktop. */
     .desktop-icon {
       width: 78px;
       padding: 5px 3px;
@@ -154,6 +165,7 @@
       text-shadow: 1px 1px 0 #000, -1px -1px 0 rgba(20,12,30,.4);
     }
 
+    /* Barra inferior responsável pelo menu iniciar, janelas abertas, áudio e relógio. */
     .taskbar {
       position: absolute;
       bottom: 0;
@@ -170,6 +182,7 @@
       box-shadow: inset 0 1px 0 #4d3b65;
     }
 
+    /* Estilo base dos botões com aparência de interfaces antigas. */
     .retro-btn {
       font-family: var(--font-ui);
       color: var(--ink);
@@ -217,6 +230,7 @@
     }
 
 
+    /* Botão responsável pela indicação visual do estado do áudio. */
     .sound-toggle {
       border: 0;
       background: transparent;
@@ -229,6 +243,7 @@
     .sound-toggle:hover { color: var(--ink); }
     .sound-toggle.muted { opacity: .45; }
 
+    /* Área lateral da barra de tarefas onde ficam informações como relógio e status. */
     .tray {
       height: 30px;
       display: flex;
@@ -245,6 +260,7 @@
       font-size: 11px;
     }
 
+    /* Estrutura visual padrão das janelas do sistema. */
     .window {
       position: absolute;
       min-width: 300px;
@@ -266,6 +282,7 @@
       height: calc(100% - var(--taskbar-h)) !important;
     }
 
+    /* Barra superior utilizada para identificar e movimentar cada janela. */
     .titlebar {
       height: 30px;
       flex: 0 0 30px;
@@ -293,6 +310,7 @@
       font-weight: bold;
     }
 
+    /* Barra de menu secundária presente dentro das janelas. */
     .menubar {
       min-height: 26px;
       padding: 5px 8px;
@@ -304,6 +322,7 @@
     .menubar span { margin-right: 18px; cursor: default; }
     .menubar span:hover { color: var(--white); background: rgba(140,92,255,.18); }
 
+    /* Área interna rolável onde o conteúdo de cada janela é exibido. */
     .window-body {
       flex: 1;
       overflow: auto;
@@ -315,6 +334,7 @@
       user-select: text;
     }
 
+    /* Painel genérico utilizado para agrupar informações dentro das janelas. */
     .panel {
       background: #21172e;
       border-top: 1px solid #4f3b67;
@@ -324,6 +344,7 @@
       padding: 12px;
     }
 
+    /* Organiza a foto de perfil e as informações principais da apresentação. */
     .hero-bio {
       display: grid;
       grid-template-columns: 90px 1fr;
@@ -352,6 +373,7 @@
     a { color: var(--cyan); text-decoration: none; }
     a:hover { text-decoration: underline; }
 
+    /* Etiquetas pequenas utilizadas para tecnologias, status e categorias. */
     .tag {
       display: inline-block;
       margin: 2px 4px 2px 0;
@@ -362,6 +384,7 @@
       font-size: 10px;
     }
 
+    /* Estrutura em duas colunas utilizada pela interface semelhante a um explorador de arquivos. */
     .explorer {
       display: grid;
       grid-template-columns: 170px 1fr;
@@ -393,6 +416,7 @@
     .file:hover { border-color: #72569a; background: rgba(140,92,255,.10); }
     .file .ficon { display:block; font-size: 28px; margin-bottom: 5px; }
 
+    /* Cartões utilizados para representar itens da trajetória profissional e acadêmica. */
     .timeline-item {
       margin-bottom: 12px;
       padding: 10px;
@@ -401,6 +425,7 @@
     }
     .timeline-item strong { color: var(--lilac); }
 
+    /* Cartão visual utilizado para apresentar cada projeto do portfólio. */
     .project-card {
       margin-bottom: 10px;
       padding: 11px;
@@ -412,6 +437,7 @@
     .skill-row {
       margin: 8px 0;
     }
+    /* Barra visual utilizada para representar níveis de habilidades. */
     .skill-meter {
       width: 100%;
       height: 14px;
@@ -424,6 +450,7 @@
       background: repeating-linear-gradient(90deg, #7d4bdd 0 8px, #9e65ff 8px 12px);
     }
 
+    /* Aparência do terminal interativo e de sua área de comandos. */
     .terminal {
       height: 100%;
       min-height: 260px;
@@ -445,6 +472,7 @@
       font: inherit;
     }
 
+    /* Estrutura principal do menu iniciar. */
     .start-menu {
       position: absolute;
       left: 6px;
@@ -479,6 +507,7 @@
     .start-item:hover { background: #5a3785; }
     .separator { height: 1px; background: #55416d; margin: 4px 0; }
 
+    /* Caixa utilizada para exibir mensagens temporárias e easter eggs. */
     .toast {
       position: absolute;
       right: 16px;
@@ -495,6 +524,7 @@
     }
     .toast.show { display: block; }
 
+    /* Tela que cobre toda a interface durante a sequência de desligamento. */
     .shutdown {
       position: fixed;
       inset: 0;
@@ -509,6 +539,7 @@
     .shutdown h2 { font-weight: normal; font-size: clamp(18px, 3vw, 36px); }
     .shutdown button { margin-top: 18px; padding: 8px 14px; }
 
+    /* Estrutura geral da janela destinada ao player de música. */
     .music-shell {
       display: grid;
       grid-template-rows: auto 1fr;
@@ -528,12 +559,14 @@
       border: 0;
       background: #0d0912;
     }
+    /* Organiza o canvas do Snake e seu painel lateral de controles. */
     .snake-wrap {
       display: grid;
       grid-template-columns: 1fr 150px;
       gap: 12px;
       align-items: start;
     }
+    /* Canvas onde o jogo Snake é desenhado pelo JavaScript. */
     #snakeCanvas {
       width: min(100%, 420px);
       aspect-ratio: 1 / 1;
@@ -573,6 +606,7 @@
     }
 
     /* GHOST PROCESS — anomalia visual proposital e perceptível */
+    /* Quando o modo fantasma está ativo, aplica pulsações e pequenos deslocamentos ao desktop. */
     .ghost-mode .desktop {
       animation: ghostPulse 1.35s steps(3,end) infinite, ghostShake 5.2s steps(2,end) infinite;
     }
@@ -676,6 +710,7 @@
     }
 
 
+    /* Pequeno elemento decorativo que atravessa a tela como um pássaro distante. */
     .raven {
       position: absolute;
       width: 10px;
@@ -691,6 +726,7 @@
       from { transform: translate(-40px, 18vh) scale(.7); }
       to { transform: translate(110vw, 9vh) scale(1.1); }
     }
+    /* Símbolo discreto no desktop utilizado como gatilho para um easter egg. */
     .occult-mark {
       position: absolute;
       right: 3vw;
@@ -704,10 +740,9 @@
 
 
 
-    /* ==========================
        DREAMGAZE THEMES
-       theme spectral | moonmilk | rosefog | liminalsea
-       ========================== */
+       spectral | moonmilk | rosefog | liminalsea
+    /* Paleta alternativa Moonmilk, com tons azulados e prateados. */
     body.theme-moonmilk {
       --bg: #0c1420;
       --panel: #202b38;
@@ -727,6 +762,7 @@
         linear-gradient(145deg, #07131b 0%, #15232d 42%, #27313f 70%, #0b1720 100%);
     }
 
+    /* Paleta alternativa Rosefog, baseada em tons rosados e noturnos. */
     body.theme-rosefog {
       --bg: #160e18;
       --panel: #352431;
@@ -746,6 +782,7 @@
         linear-gradient(145deg, #150b14 0%, #2d1825 40%, #4a2b3b 68%, #16101d 100%);
     }
 
+    /* Paleta alternativa Liminalsea, com tons esverdeados e azul-petróleo. */
     body.theme-liminalsea {
       --bg: #071716;
       --panel: #173231;
@@ -838,7 +875,7 @@
       *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; }
     }
   
-    /* DREAMGAZE CURSOR */
+    /* Cursor personalizado do Dreamgaze */
     :root {
       --cursor-main: rgba(232, 223, 255, .96);
       --cursor-glow: rgba(168, 240, 237, .55);
@@ -849,6 +886,7 @@
       cursor: none !important;
     }
 
+    /* Elementos do cursor personalizado e de seu rastro visual. */
     .dream-cursor,
     .dream-cursor-trail {
       position: fixed;
@@ -964,7 +1002,7 @@
     }
 
   
-    /* DREAMGAZE ARROW CURSOR — override */
+    /* Sobrescrita do cursor para o formato de seta */
     .dream-cursor {
       width: 0 !important;
       height: 0 !important;
@@ -1049,11 +1087,9 @@
     }
 
   
-    /* =========================================================
-       DEFAULT THEME: DREAMGAZE_PDX
-       Inspired by the supplied poster: black/plum, hot pink,
-       nocturnal green, CRT bleed and soft chromatic separation.
-       ========================================================= */
+       Tema padrão: DREAMGAZE_PDX
+       Inspirado em uma estética preta/ameixa, rosa intenso,
+       verde noturno, efeito CRT e leve separação cromática.
     body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) {
       --bg: #090b0f;
       --panel: #211820;
@@ -1195,7 +1231,8 @@
       background: rgba(55,126,97,.11);
     }
 
-    /* The previous default purple palette is now selectable as SPECTRAL. */
+    /* A antiga paleta roxa padrão agora pode ser selecionada pelo tema SPECTRAL. */
+    /* Paleta Spectral, baseada na antiga identidade roxa padrão do projeto. */
     body.theme-spectral {
       --bg: #0b1020;
       --panel: #24233d;
@@ -1234,7 +1271,7 @@
     body.theme-spectral .tag { background:#2f2143; border-color:#604782; color:#dbc8f5; }
     body.theme-spectral .terminal { background:#09070d; color:#d7bcff; }
 
-    /* Shutdown refinement */
+    /* Ajustes visuais da tela de desligamento */
     .shutdown-status {
       min-height: 18px;
       margin-top: 10px;
@@ -1244,11 +1281,9 @@
     }
 
   
-    /* =========================================================
-       DREAMGAZE DEFAULT — CONSISTENCY PASS
-       Start menu, shutdown and secondary system surfaces now
-       inherit the same pink/black/green visual language.
-       ========================================================= */
+       Tema padrão Dreamgaze: ajustes de consistência visual
+       O menu iniciar, a tela de desligamento e superfícies secundárias
+       passam a seguir a mesma linguagem visual em rosa, preto e verde.
     body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .start-menu {
       background:
         linear-gradient(145deg, rgba(48,31,45,.98), rgba(19,15,20,.99));
@@ -1316,7 +1351,7 @@
       background: #4a2941;
     }
 
-    /* Small system surfaces that previously retained purple defaults */
+    /* Pequenos elementos do sistema que ainda utilizavam a antiga paleta roxa */
     body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .toast {
       background: #2d1d2b;
       color: #f4dce8;
@@ -1351,7 +1386,7 @@
     }
 
   
-    /* START MENU — final Dreamgaze consistency */
+    /* Ajustes finais de consistência visual do menu iniciar */
     body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .start-rail {
       background:
         linear-gradient(
@@ -1403,10 +1438,9 @@
     }
 
   
-    /* ==========================
-       PSYCHEDELIC DESKTOP RIPPLE
-       Only decorative; never receives pointer events.
-       ========================== */
+       Efeito psicodélico de ondulação no desktop
+       Apenas decorativo e não interfere nos eventos do mouse.
+    /* Ondulação visual criada no ponto em que o usuário clica no papel de parede. */
     .psy-ripple {
       position: absolute;
       width: 26px;
@@ -1448,9 +1482,8 @@
       }
     }
 
-    /* ==========================
-       RETRO DREAM RADIO / SPOTIFY
-       ========================== */
+       Player retrô Dream Radio / Spotify
+    /* Moldura retrô que envolve os controles e o player incorporado do Spotify. */
     .retro-player {
       display: grid;
       grid-template-rows: auto auto 1fr;
@@ -1541,6 +1574,7 @@
       white-space: nowrap;
     }
 
+    /* Moldura interna que limita e recorta visualmente o iframe do Spotify. */
     .spotify-bezel {
       position: relative;
       min-height: 0;
@@ -1583,11 +1617,9 @@
     }
 
   
-    /* =========================================================
-       FINAL CURSOR STABILITY
-       Native cursor everywhere. This avoids cross-origin iframe
-       cursor freezing and cannot interfere with clicks.
-       ========================================================= */
+       Configuração final de estabilidade do cursor
+       Mantém o cursor nativo em toda a interface para evitar problemas
+       com iframes externos e impedir interferências nos cliques.
     html, body, body *, body *::before, body *::after {
       cursor: auto !important;
     }
@@ -1614,11 +1646,9 @@
       pointer-events: none !important;
     }
 
-    /* =========================================================
-       SPOTIFY WINDOW — RESPONSIVE FINAL PASS
-       The outer OS window never scrolls; Spotify fills the
-       remaining space and handles its own internal UI.
-       ========================================================= */
+       Janela do Spotify: ajustes finais de responsividade
+       A janela externa do sistema não possui rolagem; o Spotify ocupa
+       o espaço restante e gerencia sua própria interface interna.
     #win-music .window-body {
       padding: 8px !important;
       overflow: hidden !important;
@@ -1667,12 +1697,10 @@
     }
 
   
-    /* =========================================================
-       SPOTIFY EMBED — SCALE TO WINDOW
-       Spotify's internal embed UI has a compact intrinsic layout.
-       We keep a stable base size and scale the whole iframe so the
-       visible player grows/shrinks with the OS window.
-       ========================================================= */
+       Spotify incorporado: escala de acordo com a janela
+       O player incorporado possui dimensões internas próprias.
+       Uma dimensão base é mantida e o iframe inteiro é redimensionado
+       para acompanhar o tamanho da janela do sistema.
     #win-music .spotify-bezel {
       position: relative;
       display: grid;
@@ -1697,9 +1725,7 @@
     }
 
   
-    /* =========================================================
-       SNAKE.EXE — THEME CONSISTENCY + DREAM HAZE
-       ========================================================= */
+       SNAKE.EXE: integração com os temas e efeito de névoa
     #win-snake .window-body {
       background:
         radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--magenta) 7%, transparent), transparent 30%),
@@ -1735,10 +1761,8 @@
     }
 
   
-    /* =========================================================
-       DREAMGAZE — PINK FOG FINAL VISUAL PASS
-       More luminous pink haze, still dark enough for readability.
-       ========================================================= */
+       Dreamgaze: ajustes finais da névoa rosa
+       Aumenta a luminosidade da névoa rosa sem prejudicar a leitura.
     body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) {
       --panel: #241922;
       --panel-2: #3d2739;
@@ -1763,7 +1787,7 @@
         linear-gradient(105deg, transparent 0 69%, rgba(105,192,151,.07) 69.2% 69.8%, transparent 70.2%);
     }
 
-    /* Extra luminous haze layers using existing mist elements. */
+    /* Reforça a névoa luminosa utilizando os elementos de mist já existentes. */
     body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .mist {
       filter: blur(34px);
       mix-blend-mode: screen;
@@ -1824,7 +1848,7 @@
       box-shadow: 0 0 18px rgba(247,132,189,.055);
     }
 
-    /* Snake receives a slightly stronger fog in the default theme. */
+    /* No tema padrão, o Snake recebe um efeito de névoa um pouco mais intenso. */
     body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) #win-snake #snakeCanvas {
       box-shadow:
         inset 0 0 0 2px rgba(6,5,8,.9),
@@ -1833,12 +1857,10 @@
     }
 
   
-    /* =========================================================
-       FINAL THEME CONSISTENCY LAYER
-       All major OS surfaces derive from the active theme vars.
-       ========================================================= */
+       Camada final de consistência entre os temas
+       Os principais elementos do sistema utilizam as variáveis do tema ativo.
 
-    /* START MENU */
+    /* Menu iniciar */
     body .start-menu {
       background:
         linear-gradient(
@@ -1905,7 +1927,7 @@
         ) !important;
     }
 
-    /* SHUTDOWN */
+    /* Tela de desligamento */
     body .shutdown {
       background:
         radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--magenta) 9%, transparent), transparent 28%),
@@ -1927,9 +1949,9 @@
       color: var(--muted) !important;
     }
 
-    /* SPOTIFY / DREAM RADIO SHELL
-       The official iframe remains cross-origin, but its chassis and
-       overall compositing now follow the selected theme. */
+    /* Estrutura visual do Spotify / Dream Radio
+       O iframe oficial continua externo, mas sua moldura e composição visual
+       passam a acompanhar o tema selecionado. */
     body #win-music .retro-player {
       background:
         linear-gradient(
@@ -1996,8 +2018,8 @@
       box-shadow: 0 0 7px color-mix(in srgb, var(--magenta) 42%, transparent) !important;
     }
 
-    /* Gentle theme-dependent compositing over the external Spotify iframe.
-       This does not alter or access Spotify's internal DOM. */
+    /* Aplica um tratamento visual suave ao iframe externo do Spotify.
+       Isso não altera nem acessa o DOM interno do Spotify. */
     body #win-music .spotify-frame {
       filter:
         saturate(.82)
@@ -2006,7 +2028,7 @@
         drop-shadow(0 0 7px color-mix(in srgb, var(--magenta) 6%, transparent)) !important;
     }
 
-    /* TASKBAR / TRAY */
+    /* Barra de tarefas e área de notificações */
     body .taskbar {
       background: color-mix(in srgb, var(--panel) 88%, #000) !important;
       border-top-color: color-mix(in srgb, var(--panel-3) 78%, var(--lilac) 12%) !important;
@@ -2028,7 +2050,7 @@
       border-bottom-color: color-mix(in srgb, var(--shadow) 92%, #000) !important;
     }
 
-    /* TOAST / NOTIFICATION */
+    /* Notificações temporárias */
     body .toast {
       background: color-mix(in srgb, var(--panel) 88%, #000) !important;
       border-color: color-mix(in srgb, var(--magenta) 48%, var(--panel-3)) !important;
@@ -2038,7 +2060,7 @@
         0 0 14px color-mix(in srgb, var(--magenta) 5%, transparent) !important;
     }
 
-    /* SNAKE: reinforce inherited theme on every visible component. */
+    /* Reforça as cores do tema ativo em todos os componentes visíveis do Snake. */
     body #win-snake .snake-panel {
       background: color-mix(in srgb, var(--panel) 86%, #000) !important;
       color: var(--ink) !important;
