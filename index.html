@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+  <!-- Metadados, título da página e carregamento do arquivo de estilos. -->
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,12 +8,16 @@
   <title>TatsuyaDesire/97 — Portfolio OS</title>
   <link rel="stylesheet" href="style.css">
 </head>
+  <!-- Estrutura visual e interativa do portfólio em formato de sistema operacional. -->
 <body>
   
+  <!-- Elementos visuais do cursor personalizado e de seu rastro. -->
   <div class="dream-cursor-trail" id="dreamCursorTrail" aria-hidden="true"></div>
   <div class="dream-cursor" id="dreamCursor" aria-hidden="true"></div>
 
+  <!-- Área principal que representa o desktop do sistema. -->
   <main class="desktop" id="desktop" aria-label="Desktop TatsuyaDesire/97">
+    <!-- Camadas decorativas do papel de parede: estrelas, névoa, pássaros e easter egg. -->
     <div class="stars" id="stars"></div>
     <div class="mist one"></div>
     <div class="mist two"></div>
@@ -20,11 +25,13 @@
     <div class="raven" style="top:22%;animation-delay:-11s"></div>
     <div class="occult-mark" id="occultMark" title="...">☾</div>
 
+    <!-- Título decorativo exibido ao fundo do desktop. -->
     <div class="wallpaper-title" aria-hidden="true">
       <h1>TatsuyaDesire/97</h1>
       <p>A DREAM STORED ON DISK</p>
     </div>
 
+    <!-- Atalhos principais para abrir as janelas do portfólio. -->
     <section class="desktop-icons" aria-label="Ícones do desktop">
       <div class="desktop-icon" data-open="computer" tabindex="0">
         <span class="icon">▣</span><span>Meu Computador</span>
@@ -62,6 +69,7 @@
     </section>
   </main>
 
+  <!-- Menu iniciar com atalhos para as principais áreas e opção de desligamento. -->
   <div class="start-menu" id="startMenu">
     <div class="start-rail">TatsuyaDesire/97</div>
     <div class="start-items">
@@ -79,6 +87,7 @@
     </div>
   </div>
 
+  <!-- Barra de tarefas com botão iniciar, janelas abertas, áudio e relógio. -->
   <footer class="taskbar">
     <button class="retro-btn start-btn" id="startBtn">✦ Start</button>
     <div class="task-list" id="taskList"></div>
@@ -89,8 +98,10 @@
     </div>
   </footer>
 
+  <!-- Área utilizada para mensagens temporárias e easter eggs. -->
   <div class="toast" id="toast"></div>
 
+  <!-- Tela de desligamento simulada do sistema. -->
   <section class="shutdown" id="shutdownScreen">
     <div>
       <h2 id="shutdownTitle">It is now safe to leave this website.</h2>
@@ -100,7 +111,8 @@
     </div>
   </section>
 
-  <!-- WINDOWS -->
+  <!-- Janelas principais do sistema -->
+  <!-- Janela Meu Computador: reúne atalhos internos para as áreas do portfólio. -->
   <section class="window" id="win-computer" data-title="Meu Computador" style="left:160px;top:65px;width:620px;height:420px;">
     <div class="titlebar">
       <span>▣ Meu Computador</span>
@@ -134,6 +146,7 @@
     </div>
   </section>
 
+  <!-- Janela Sobre Mim: conteúdo preenchido dinamicamente pelo JavaScript. -->
   <section class="window" id="win-about" data-title="README.txt — Notepad" style="left:240px;top:90px;width:520px;height:360px;">
     <div class="titlebar">
       <span>□ README.txt — Notepad</span>
@@ -145,6 +158,7 @@
     <div class="window-body" id="aboutContent"></div>
   </section>
 
+  <!-- Janela de experiência profissional e formação acadêmica. -->
   <section class="window" id="win-experience" data-title="experience.exe" style="left:310px;top:70px;width:560px;height:410px;">
     <div class="titlebar">
       <span>▤ experience.exe</span>
@@ -156,6 +170,7 @@
     <div class="window-body" id="experienceContent"></div>
   </section>
 
+  <!-- Janela de projetos publicados e informações técnicas. -->
   <section class="window" id="win-projects" data-title="projects.exe" style="left:180px;top:100px;width:650px;height:430px;">
     <div class="titlebar">
       <span>▥ projects.exe</span>
@@ -167,6 +182,7 @@
     <div class="window-body" id="projectsContent"></div>
   </section>
 
+  <!-- Janela de habilidades e tecnologias utilizadas. -->
   <section class="window" id="win-skills" data-title="skills.dll" style="left:380px;top:120px;width:470px;height:370px;">
     <div class="titlebar">
       <span>◆ skills.dll</span>
@@ -178,6 +194,7 @@
     <div class="window-body" id="skillsContent"></div>
   </section>
 
+  <!-- Janela de competências, formações complementares e experiências adicionais. -->
   <section class="window" id="win-competencies" data-title="competencies.sys" style="left:300px;top:90px;width:590px;height:430px;">
     <div class="titlebar">
       <span>✦ competencies.sys</span>
@@ -189,6 +206,7 @@
     <div class="window-body" id="competenciesContent"></div>
   </section>
 
+  <!-- Janela de contato com links externos e status profissional. -->
   <section class="window" id="win-contact" data-title="Internet — Contact Hub" style="left:270px;top:110px;width:520px;height:330px;">
     <div class="titlebar">
       <span>⌁ Internet — Contact Hub</span>
@@ -200,6 +218,7 @@
     <div class="window-body" id="contactContent"></div>
   </section>
 
+  <!-- Terminal interativo que recebe comandos e ativa algumas funcionalidades e easter eggs. -->
   <section class="window" id="win-terminal" data-title="TatsuyaDesire/97 Terminal" style="left:200px;top:140px;width:600px;height:350px;">
     <div class="titlebar">
       <span>⌘ TatsuyaDesire/97 Terminal</span>
@@ -215,6 +234,7 @@
     </div>
   </section>
 
+  <!-- Janela do player de música com uma playlist incorporada do Spotify. -->
   <section class="window" id="win-music" data-title="Music Player — Spotify" style="left:150px;top:70px;width:460px;height:500px;">
     <div class="titlebar">
       <span>♫ Music Player — Spotify</span>
@@ -226,6 +246,7 @@
     <div class="window-body">
       <div class="music-shell">
         <div class="retro-player">
+          <!-- Painel visual que simula um display de rádio retrô. -->
           <div class="retro-player-display">
             <div>
               DREAM RADIO / SPOTIFY LINK<br>
@@ -234,6 +255,7 @@
             <div class="retro-player-led" aria-hidden="true"><i></i><i></i></div>
           </div>
 
+          <!-- Indicadores visuais do player, usados apenas como parte da estética da interface. -->
           <div class="retro-player-controls">
             <span class="retro-player-chip">STEREO</span>
             <span class="retro-player-chip">TAPE HISS</span>
@@ -241,6 +263,7 @@
             
           </div>
 
+          <!-- Moldura que contém o player oficial incorporado do Spotify. -->
           <div class="spotify-bezel">
             <iframe
               id="spotifyPlayer"
@@ -256,6 +279,7 @@
     </div>
   </section>
 
+  <!-- Janela do jogo Snake, controlado pelo JavaScript e desenhado em canvas. -->
   <section class="window" id="win-snake" data-title="Snake.exe" style="left:250px;top:65px;width:630px;height:520px;">
     <div class="titlebar">
       <span>≈ Snake.exe</span>
@@ -266,7 +290,9 @@
     <div class="menubar"><span>Game</span><span>Score</span><span>Help</span></div>
     <div class="window-body">
       <div class="snake-wrap">
+        <!-- Área gráfica onde o jogo da cobrinha é renderizado. -->
         <canvas id="snakeCanvas" width="420" height="420" aria-label="Jogo da cobrinha"></canvas>
+        <!-- Painel lateral com pontuação, recorde, controles e instruções do jogo. -->
         <aside class="snake-panel">
           <b>SCORE</b>
           <div class="snake-score" id="snakeScore">0000</div>
@@ -285,6 +311,7 @@
     </div>
   </section>
 
+  <!-- Lixeira do sistema contendo um easter egg interativo. -->
   <section class="window" id="win-trash" data-title="Lixeira" style="left:420px;top:170px;width:360px;height:260px;">
     <div class="titlebar">
       <span>⌫ Lixeira</span>
@@ -300,6 +327,7 @@
     </div>
   </section>
 
+  <!-- Carrega a lógica responsável pelas janelas, sons, temas, terminal, Snake e demais interações. -->
   <script src="script.js"></script>
 </body>
 </html>
