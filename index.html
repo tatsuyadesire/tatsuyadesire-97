@@ -1,0 +1,3557 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#160f24" />
+  <title>TatsuyaDesire/97 — Portfolio OS</title>
+  <style>
+    :root {
+      --bg: #0b1020;
+      --panel: #24233d;
+      --panel-2: #343255;
+      --panel-3: #514875;
+      --ink: #f5f1ff;
+      --muted: #b8b8dc;
+      --violet: #8d82ff;
+      --lilac: #d7c7ff;
+      --magenta: #e79bdc;
+      --cyan: #a8f0ed;
+      --black: #09070d;
+      --white: #fff;
+      --shadow: #0d0815;
+      --taskbar-h: 42px;
+      --font-ui: "Courier New", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body {
+      font-family: var(--font-ui);
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 22%, rgba(168,240,237,.12), transparent 24%),
+        radial-gradient(circle at 68% 42%, rgba(141,130,255,.20), transparent 31%),
+        radial-gradient(circle at 78% 78%, rgba(231,155,220,.14), transparent 25%),
+        linear-gradient(145deg, #07101d 0%, #17172d 38%, #261d3b 68%, #0c1523 100%);
+      image-rendering: pixelated;
+      user-select: none;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .23;
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+      background-size: 4px 4px;
+      mix-blend-mode: screen;
+      z-index: 9998;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9999;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.016),
+        rgba(255,255,255,.016) 1px,
+        rgba(0,0,0,.03) 2px,
+        rgba(0,0,0,.03) 3px
+      );
+    }
+
+    .desktop {
+      position: absolute;
+      inset: 0 0 var(--taskbar-h) 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(137,240,232,.05), transparent 2px),
+        transparent;
+    }
+
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: rgba(255,255,255,.8);
+      box-shadow: 0 0 6px rgba(196,156,255,.8);
+      animation: twinkle 2.6s steps(2,end) infinite;
+    }
+
+    @keyframes twinkle {
+      50% { opacity: .25; transform: scale(.8); }
+    }
+
+    .mist {
+      position: absolute;
+      width: 340px;
+      height: 180px;
+      border-radius: 50%;
+      filter: blur(32px);
+      background: rgba(140,92,255,.13);
+      animation: drift 16s linear infinite alternate;
+      pointer-events: none;
+    }
+    .mist.one { top: 8%; left: 12%; }
+    .mist.two { right: 6%; bottom: 8%; animation-duration: 20s; background: rgba(213,92,255,.10); }
+
+    @keyframes drift {
+      to { transform: translate(70px, 26px); }
+    }
+
+    .wallpaper-title {
+      position: absolute;
+      right: 4vw;
+      top: 11vh;
+      text-align: right;
+      color: rgba(244,236,255,.17);
+      text-shadow: 2px 2px 0 rgba(0,0,0,.35);
+      pointer-events: none;
+    }
+    .wallpaper-title h1 { margin: 0; font-size: clamp(42px, 8vw, 120px); letter-spacing: -6px; }
+    .wallpaper-title p { margin: -8px 8px 0 0; font-size: 12px; letter-spacing: 4px; }
+
+    .desktop-icons {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      display: grid;
+      grid-template-columns: repeat(2, 84px);
+      gap: 10px 8px;
+      z-index: 3;
+    }
+
+    .desktop-icon {
+      width: 78px;
+      padding: 5px 3px;
+      color: #fff;
+      text-align: center;
+      font-size: 11px;
+      cursor: default;
+      border: 1px solid transparent;
+    }
+    .desktop-icon:hover,
+    .desktop-icon.selected {
+      background: rgba(140,92,255,.16);
+      border-color: rgba(196,156,255,.32);
+    }
+    .desktop-icon .icon {
+      display: block;
+      margin: 0 auto 5px;
+      width: 38px;
+      height: 38px;
+      line-height: 38px;
+      font-size: 28px;
+      filter: drop-shadow(2px 2px 0 #000);
+    }
+    .desktop-icon span:last-child {
+      text-shadow: 1px 1px 0 #000, -1px -1px 0 rgba(20,12,30,.4);
+    }
+
+    .taskbar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: var(--taskbar-h);
+      z-index: 7000;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 6px;
+      background: #271d38;
+      border-top: 2px solid #6d568b;
+      box-shadow: inset 0 1px 0 #4d3b65;
+    }
+
+    .retro-btn {
+      font-family: var(--font-ui);
+      color: var(--ink);
+      background: #352747;
+      border-top: 2px solid #6c5687;
+      border-left: 2px solid #6c5687;
+      border-right: 2px solid #120b1c;
+      border-bottom: 2px solid #120b1c;
+      box-shadow: inset 1px 1px 0 rgba(255,255,255,.05);
+      cursor: pointer;
+    }
+    .retro-btn:active,
+    .retro-btn.pressed {
+      border-top-color: #120b1c;
+      border-left-color: #120b1c;
+      border-right-color: #6c5687;
+      border-bottom-color: #6c5687;
+      transform: translate(1px,1px);
+    }
+
+    .start-btn {
+      height: 32px;
+      min-width: 88px;
+      padding: 0 10px;
+      font-weight: bold;
+      font-size: 12px;
+    }
+
+    .task-list {
+      flex: 1;
+      display: flex;
+      min-width: 0;
+      gap: 4px;
+      overflow: hidden;
+    }
+    .task-btn {
+      min-width: 120px;
+      max-width: 180px;
+      height: 30px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      text-align: left;
+      padding: 0 8px;
+    }
+
+
+    .sound-toggle {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      font: inherit;
+      padding: 0 2px;
+      cursor: pointer;
+      text-shadow: 0 0 7px rgba(215,199,255,.25);
+    }
+    .sound-toggle:hover { color: var(--ink); }
+    .sound-toggle.muted { opacity: .45; }
+
+    .tray {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 9px;
+      color: var(--muted);
+      background: #21182f;
+      border: 1px solid #120b1c;
+      border-top-color: #120b1c;
+      border-left-color: #120b1c;
+      border-bottom-color: #58446e;
+      border-right-color: #58446e;
+      font-size: 11px;
+    }
+
+    .window {
+      position: absolute;
+      min-width: 300px;
+      min-height: 180px;
+      background: #21182f;
+      border-top: 2px solid #6d568b;
+      border-left: 2px solid #6d568b;
+      border-right: 2px solid #0a0610;
+      border-bottom: 2px solid #0a0610;
+      box-shadow: 7px 7px 0 rgba(0,0,0,.3);
+      display: none;
+      overflow: hidden;
+    }
+    .window.open { display: flex; flex-direction: column; }
+    .window.maximized {
+      top: 0 !important;
+      left: 0 !important;
+      width: 100% !important;
+      height: calc(100% - var(--taskbar-h)) !important;
+    }
+
+    .titlebar {
+      height: 30px;
+      flex: 0 0 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 3px 4px 3px 8px;
+      background: linear-gradient(90deg, #5a2da0, #3b216a 60%, #24163d);
+      color: white;
+      cursor: move;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .window.inactive .titlebar {
+      background: linear-gradient(90deg, #453957, #31283d);
+      color: #c7bbd2;
+    }
+
+    .title-actions { display: flex; gap: 3px; }
+    .title-actions button {
+      width: 24px;
+      height: 22px;
+      padding: 0;
+      line-height: 18px;
+      font-weight: bold;
+    }
+
+    .menubar {
+      min-height: 26px;
+      padding: 5px 8px;
+      background: #2a1f39;
+      border-bottom: 1px solid #100a18;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .menubar span { margin-right: 18px; cursor: default; }
+    .menubar span:hover { color: var(--white); background: rgba(140,92,255,.18); }
+
+    .window-body {
+      flex: 1;
+      overflow: auto;
+      background: #181120;
+      color: var(--ink);
+      padding: 12px;
+      font-size: 12px;
+      line-height: 1.55;
+      user-select: text;
+    }
+
+    .panel {
+      background: #21172e;
+      border-top: 1px solid #4f3b67;
+      border-left: 1px solid #4f3b67;
+      border-right: 1px solid #0e0915;
+      border-bottom: 1px solid #0e0915;
+      padding: 12px;
+    }
+
+    .hero-bio {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 14px;
+    }
+    .avatar {
+      width: 90px; height: 90px;
+      display: grid; place-items: center;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 50% 48%, #a66cff 0 18%, #5f2d8e 19% 36%, transparent 37%),
+        radial-gradient(circle, rgba(213,92,255,.22), transparent 65%);
+      border: 2px solid #6e508f;
+      box-shadow: inset 0 0 0 2px #160c24;
+      font-size: 30px;
+    }
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      image-rendering: auto;
+      filter: saturate(.78) contrast(1.06) brightness(.94);
+    }
+
+    h2,h3 { margin-top: 0; }
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .tag {
+      display: inline-block;
+      margin: 2px 4px 2px 0;
+      padding: 2px 6px;
+      border: 1px solid #604782;
+      background: #2f2143;
+      color: #dbc8f5;
+      font-size: 10px;
+    }
+
+    .explorer {
+      display: grid;
+      grid-template-columns: 170px 1fr;
+      height: 100%;
+      min-height: 260px;
+    }
+    .tree {
+      background: #15101d;
+      padding: 10px;
+      border-right: 1px solid #4a365d;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .files {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px,1fr));
+      align-content: start;
+      gap: 8px;
+      padding: 12px;
+      background: #1c1426;
+    }
+    .file {
+      padding: 9px;
+      text-align: center;
+      border: 1px solid transparent;
+      cursor: pointer;
+      font-size: 11px;
+    }
+    .file:hover { border-color: #72569a; background: rgba(140,92,255,.10); }
+    .file .ficon { display:block; font-size: 28px; margin-bottom: 5px; }
+
+    .timeline-item {
+      margin-bottom: 12px;
+      padding: 10px;
+      border-left: 3px solid var(--violet);
+      background: #21172e;
+    }
+    .timeline-item strong { color: var(--lilac); }
+
+    .project-card {
+      margin-bottom: 10px;
+      padding: 11px;
+      border: 1px solid #4a3661;
+      background: #21172e;
+    }
+    .project-card h3 { color: var(--lilac); margin-bottom: 6px; }
+
+    .skill-row {
+      margin: 8px 0;
+    }
+    .skill-meter {
+      width: 100%;
+      height: 14px;
+      border: 1px solid #5c4475;
+      background: #120d18;
+      overflow: hidden;
+    }
+    .skill-meter > div {
+      height: 100%;
+      background: repeating-linear-gradient(90deg, #7d4bdd 0 8px, #9e65ff 8px 12px);
+    }
+
+    .terminal {
+      height: 100%;
+      min-height: 260px;
+      padding: 10px;
+      background: #09070d;
+      color: #d7bcff;
+      font-family: "Courier New", monospace;
+      overflow: auto;
+      white-space: pre-wrap;
+    }
+    .terminal-line { margin-bottom: 3px; }
+    .terminal-input-line { display:flex; gap: 6px; }
+    .terminal input {
+      flex: 1;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: #f4ecff;
+      font: inherit;
+    }
+
+    .start-menu {
+      position: absolute;
+      left: 6px;
+      bottom: var(--taskbar-h);
+      width: 250px;
+      display: none;
+      z-index: 8000;
+      background: #2a1f39;
+      border-top: 2px solid #705890;
+      border-left: 2px solid #705890;
+      border-right: 2px solid #0c0712;
+      border-bottom: 2px solid #0c0712;
+      box-shadow: 6px 6px 0 rgba(0,0,0,.25);
+    }
+    .start-menu.open { display: flex; }
+    .start-rail {
+      width: 34px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      padding: 8px 6px;
+      background: linear-gradient(#4c2e72, #1f142f);
+      color: rgba(255,255,255,.7);
+      font-weight: bold;
+      letter-spacing: 2px;
+    }
+    .start-items { flex:1; padding: 6px; }
+    .start-item {
+      padding: 9px 8px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .start-item:hover { background: #5a3785; }
+    .separator { height: 1px; background: #55416d; margin: 4px 0; }
+
+    .toast {
+      position: absolute;
+      right: 16px;
+      bottom: 56px;
+      z-index: 9000;
+      max-width: 320px;
+      padding: 10px 12px;
+      background: #241731;
+      border: 1px solid #805bac;
+      box-shadow: 4px 4px 0 rgba(0,0,0,.3);
+      color: #eadcff;
+      font-size: 11px;
+      display: none;
+    }
+    .toast.show { display: block; }
+
+    .shutdown {
+      position: fixed;
+      inset: 0;
+      display: none;
+      place-items: center;
+      z-index: 12000;
+      background: #09060f;
+      color: #c9a7ff;
+      text-align: center;
+    }
+    .shutdown.show { display: grid; }
+    .shutdown h2 { font-weight: normal; font-size: clamp(18px, 3vw, 36px); }
+    .shutdown button { margin-top: 18px; padding: 8px 14px; }
+
+    .music-shell {
+      display: grid;
+      grid-template-rows: auto 1fr;
+      height: 100%;
+      gap: 10px;
+    }
+    .music-status {
+      padding: 9px 10px;
+      border: 1px solid #5d4775;
+      background: #1d1428;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    .spotify-frame {
+      width: 100%;
+      height: 352px;
+      border: 0;
+      background: #0d0912;
+    }
+    .snake-wrap {
+      display: grid;
+      grid-template-columns: 1fr 150px;
+      gap: 12px;
+      align-items: start;
+    }
+    #snakeCanvas {
+      width: min(100%, 420px);
+      aspect-ratio: 1 / 1;
+      background: #09070d;
+      border: 2px solid #6d568b;
+      box-shadow: inset 0 0 0 2px #160c24;
+      image-rendering: pixelated;
+      display: block;
+    }
+    .snake-panel {
+      background: #21172e;
+      border-top: 1px solid #4f3b67;
+      border-left: 1px solid #4f3b67;
+      border-right: 1px solid #0e0915;
+      border-bottom: 1px solid #0e0915;
+      padding: 10px;
+      font-size: 11px;
+    }
+    .snake-panel button {
+      width: 100%;
+      margin-top: 6px;
+      padding: 7px 8px;
+    }
+    .snake-score {
+      font-size: 18px;
+      color: var(--lilac);
+      margin: 6px 0 12px;
+    }
+    .snake-help {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    @media (max-width: 720px) {
+      .snake-wrap { grid-template-columns: 1fr; }
+      .snake-panel { order: -1; }
+      .spotify-frame { height: 420px; }
+    }
+
+    /* GHOST PROCESS — anomalia visual proposital e perceptível */
+    .ghost-mode .desktop {
+      animation: ghostPulse 1.35s steps(3,end) infinite, ghostShake 5.2s steps(2,end) infinite;
+    }
+
+    .ghost-mode .desktop::after {
+      content: "GHOST PROCESS // SIGNAL LOST // 00:00";
+      position: absolute;
+      inset: 0;
+      z-index: 6900;
+      pointer-events: none;
+      display: grid;
+      place-items: center;
+      color: rgba(230,220,255,.24);
+      font: bold clamp(18px,3vw,42px) "Courier New", monospace;
+      letter-spacing: .16em;
+      text-align: center;
+      text-shadow: 3px 0 rgba(255,80,190,.22), -3px 0 rgba(90,240,255,.22), 0 0 24px rgba(215,199,255,.32);
+      background:
+        repeating-linear-gradient(0deg, transparent 0 5px, rgba(215,199,255,.035) 6px, transparent 7px),
+        radial-gradient(circle at 50% 45%, rgba(190,160,255,.10), transparent 32%);
+      mix-blend-mode: screen;
+      animation: ghostMessage 2.6s steps(1,end) infinite;
+    }
+
+    .ghost-mode .wallpaper-title { animation: ghostTitle 1.7s steps(2,end) infinite; }
+    .ghost-mode .star {
+      box-shadow: 0 0 12px rgba(215,199,255,.95);
+      animation-duration: .38s;
+    }
+    .ghost-mode .mist {
+      opacity: .9;
+      filter: blur(22px) saturate(1.8);
+    }
+    .ghost-mode .window.open {
+      box-shadow: 7px 7px 0 rgba(0,0,0,.3), -5px 0 18px rgba(90,240,255,.08), 5px 0 18px rgba(255,80,190,.08);
+    }
+
+    @keyframes ghostPulse {
+      0%, 100% { filter: hue-rotate(0deg) brightness(1) contrast(1); }
+      45% { filter: hue-rotate(34deg) brightness(1.22) contrast(1.08); }
+      48% { filter: hue-rotate(-18deg) brightness(.88) contrast(1.25); }
+      52% { filter: hue-rotate(42deg) brightness(1.28) contrast(1.12); }
+    }
+    @keyframes ghostShake {
+      0%, 92%, 100% { transform: translate(0,0); }
+      93% { transform: translate(-2px,1px); }
+      95% { transform: translate(3px,-1px); }
+      97% { transform: translate(-1px,2px); }
+    }
+    @keyframes ghostTitle {
+      0%, 86%, 100% { transform: translate(0,0); opacity: 1; }
+      88% { transform: translate(-7px,0); opacity: .42; }
+      90% { transform: translate(6px,1px); opacity: .9; }
+      92% { transform: translate(-2px,-1px); opacity: .28; }
+    }
+    @keyframes ghostMessage {
+      0%, 18%, 42%, 100% { opacity: 0; }
+      19%, 25% { opacity: .85; transform: translateX(-2px); }
+      26%, 31% { opacity: .18; transform: translateX(3px); }
+      43%, 48% { opacity: .58; transform: translateY(1px); }
+    }
+
+    @media (max-width: 720px) {
+      :root { --taskbar-h: 48px; }
+      .desktop-icons {
+        grid-template-columns: repeat(2, 76px);
+        transform: scale(.92);
+        transform-origin: top left;
+      }
+      .wallpaper-title { top: 36%; right: 5vw; }
+      .window {
+        min-width: 0;
+        width: calc(100% - 12px) !important;
+        height: calc(100% - var(--taskbar-h) - 12px) !important;
+        left: 6px !important;
+        top: 6px !important;
+      }
+      .explorer { grid-template-columns: 110px 1fr; }
+      .task-btn { min-width: 90px; }
+      .tray .net { display:none; }
+      .hero-bio { grid-template-columns: 1fr; }
+    }
+
+
+    .desktop-icon .icon {
+      font-family: "Courier New", monospace;
+      color: #e8ddff;
+      background: linear-gradient(135deg, rgba(168,240,237,.14), rgba(141,130,255,.2), rgba(231,155,220,.14));
+      border: 1px solid rgba(215,199,255,.35);
+      box-shadow: 3px 3px 0 rgba(8,10,22,.55), inset 0 0 10px rgba(215,199,255,.08);
+      text-shadow: 0 0 8px rgba(215,199,255,.55);
+    }
+    .window {
+      backdrop-filter: blur(2px);
+    }
+    .titlebar {
+      background: linear-gradient(90deg, #4c477e, #55426f 52%, #263d55);
+    }
+    .wallpaper-title h1 {
+      text-shadow: 2px 2px 0 rgba(8,8,20,.4), 0 0 22px rgba(215,199,255,.13);
+    }
+
+
+    .raven {
+      position: absolute;
+      width: 10px;
+      height: 6px;
+      border-left: 2px solid rgba(230,220,255,.7);
+      border-right: 2px solid rgba(230,220,255,.7);
+      border-radius: 50%;
+      opacity: .45;
+      pointer-events: none;
+      animation: ravenFly 18s linear infinite;
+    }
+    @keyframes ravenFly {
+      from { transform: translate(-40px, 18vh) scale(.7); }
+      to { transform: translate(110vw, 9vh) scale(1.1); }
+    }
+    .occult-mark {
+      position: absolute;
+      right: 3vw;
+      bottom: 8vh;
+      font-size: 22px;
+      color: rgba(215,199,255,.08);
+      text-shadow: 0 0 12px rgba(215,199,255,.12);
+      cursor: pointer;
+      z-index: 2;
+    }
+
+
+
+    /* ==========================
+       DREAMGAZE THEMES
+       theme spectral | moonmilk | rosefog | liminalsea
+       ========================== */
+    body.theme-moonmilk {
+      --bg: #0c1420;
+      --panel: #202b38;
+      --panel-2: #2a3948;
+      --panel-3: #4b6070;
+      --ink: #f3fbff;
+      --muted: #b9cbd4;
+      --violet: #91b9d7;
+      --lilac: #d7efff;
+      --magenta: #dfb9dc;
+      --cyan: #bdeff1;
+      --shadow: #071018;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(189,239,241,.16), transparent 24%),
+        radial-gradient(circle at 72% 38%, rgba(145,185,215,.16), transparent 30%),
+        radial-gradient(circle at 76% 80%, rgba(223,185,220,.12), transparent 27%),
+        linear-gradient(145deg, #07131b 0%, #15232d 42%, #27313f 70%, #0b1720 100%);
+    }
+
+    body.theme-rosefog {
+      --bg: #160e18;
+      --panel: #352431;
+      --panel-2: #49303f;
+      --panel-3: #74505f;
+      --ink: #fff2f6;
+      --muted: #d2b5c0;
+      --violet: #d08aaa;
+      --lilac: #f2c8dc;
+      --magenta: #ff9fc8;
+      --cyan: #d8d0ff;
+      --shadow: #130912;
+      background:
+        radial-gradient(circle at 16% 22%, rgba(255,159,200,.13), transparent 25%),
+        radial-gradient(circle at 66% 38%, rgba(208,138,170,.18), transparent 31%),
+        radial-gradient(circle at 82% 76%, rgba(216,208,255,.10), transparent 25%),
+        linear-gradient(145deg, #150b14 0%, #2d1825 40%, #4a2b3b 68%, #16101d 100%);
+    }
+
+    body.theme-liminalsea {
+      --bg: #071716;
+      --panel: #173231;
+      --panel-2: #214541;
+      --panel-3: #3f6861;
+      --ink: #ebfff9;
+      --muted: #a8cdc4;
+      --violet: #73c4b4;
+      --lilac: #bff4e7;
+      --magenta: #c5a9d8;
+      --cyan: #78efe0;
+      --shadow: #04100f;
+      background:
+        radial-gradient(circle at 19% 19%, rgba(120,239,224,.14), transparent 24%),
+        radial-gradient(circle at 69% 40%, rgba(115,196,180,.18), transparent 31%),
+        radial-gradient(circle at 80% 79%, rgba(197,169,216,.09), transparent 26%),
+        linear-gradient(145deg, #041311 0%, #102824 40%, #1d403a 69%, #091c1a 100%);
+    }
+
+    body.theme-moonmilk .taskbar,
+    body.theme-rosefog .taskbar,
+    body.theme-liminalsea .taskbar { background: var(--panel); border-top-color: var(--panel-3); }
+
+    body.theme-moonmilk .retro-btn,
+    body.theme-rosefog .retro-btn,
+    body.theme-liminalsea .retro-btn { background: var(--panel-2); color: var(--ink); border-top-color: var(--panel-3); border-left-color: var(--panel-3); }
+
+    body.theme-moonmilk .tray,
+    body.theme-rosefog .tray,
+    body.theme-liminalsea .tray { background: color-mix(in srgb, var(--panel) 78%, #000); color: var(--muted); }
+
+    body.theme-moonmilk .window,
+    body.theme-rosefog .window,
+    body.theme-liminalsea .window { background: var(--panel); border-top-color: var(--panel-3); border-left-color: var(--panel-3); }
+
+    body.theme-moonmilk .titlebar { background: linear-gradient(90deg, #58758a, #647f90 52%, #345a67); }
+    body.theme-rosefog .titlebar { background: linear-gradient(90deg, #87445f, #784255 52%, #513549); }
+    body.theme-liminalsea .titlebar { background: linear-gradient(90deg, #316d65, #3f716b 52%, #24514e); }
+
+    body.theme-moonmilk .menubar,
+    body.theme-rosefog .menubar,
+    body.theme-liminalsea .menubar { background: color-mix(in srgb, var(--panel) 86%, #000); }
+
+    body.theme-moonmilk .window-body,
+    body.theme-rosefog .window-body,
+    body.theme-liminalsea .window-body,
+    body.theme-moonmilk .files,
+    body.theme-rosefog .files,
+    body.theme-liminalsea .files { background: color-mix(in srgb, var(--bg) 76%, #000); }
+
+    body.theme-moonmilk .tree,
+    body.theme-rosefog .tree,
+    body.theme-liminalsea .tree { background: color-mix(in srgb, var(--bg) 88%, #000); color: var(--muted); }
+
+    body.theme-moonmilk .panel,
+    body.theme-rosefog .panel,
+    body.theme-liminalsea .panel,
+    body.theme-moonmilk .timeline-item,
+    body.theme-rosefog .timeline-item,
+    body.theme-liminalsea .timeline-item,
+    body.theme-moonmilk .project-card,
+    body.theme-rosefog .project-card,
+    body.theme-liminalsea .project-card { background: color-mix(in srgb, var(--panel) 86%, #000); border-color: color-mix(in srgb, var(--panel-3) 60%, #000); }
+
+    body.theme-moonmilk .tag,
+    body.theme-rosefog .tag,
+    body.theme-liminalsea .tag { background: var(--panel-2); border-color: var(--panel-3); color: var(--lilac); }
+
+    body.theme-moonmilk .terminal,
+    body.theme-rosefog .terminal,
+    body.theme-liminalsea .terminal { background: color-mix(in srgb, var(--bg) 55%, #000); color: var(--lilac); }
+
+    body.theme-moonmilk .desktop-icon .icon,
+    body.theme-rosefog .desktop-icon .icon,
+    body.theme-liminalsea .desktop-icon .icon {
+      color: var(--lilac);
+      background: linear-gradient(135deg,
+        color-mix(in srgb, var(--cyan) 14%, transparent),
+        color-mix(in srgb, var(--violet) 20%, transparent),
+        color-mix(in srgb, var(--magenta) 14%, transparent));
+      border-color: color-mix(in srgb, var(--lilac) 35%, transparent);
+      text-shadow: 0 0 8px color-mix(in srgb, var(--lilac) 55%, transparent);
+    }
+
+    body.theme-moonmilk .toast,
+    body.theme-rosefog .toast,
+    body.theme-liminalsea .toast { background: var(--panel); border-color: var(--violet); color: var(--lilac); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; scroll-behavior: auto !important; }
+    }
+  
+    /* DREAMGAZE CURSOR */
+    :root {
+      --cursor-main: rgba(232, 223, 255, .96);
+      --cursor-glow: rgba(168, 240, 237, .55);
+      --cursor-accent: rgba(231, 155, 220, .55);
+    }
+
+    html, body, button, a, input, .file, .desktop-icon, .start-item, .occult-mark {
+      cursor: none !important;
+    }
+
+    .dream-cursor,
+    .dream-cursor-trail {
+      position: fixed;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+      z-index: 20000;
+      transform: translate(-50%, -50%);
+      will-change: transform, left, top;
+    }
+
+    .dream-cursor {
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--cursor-main);
+      border-radius: 50%;
+      box-shadow:
+        0 0 8px var(--cursor-glow),
+        0 0 18px rgba(215,199,255,.24),
+        inset 0 0 7px rgba(255,255,255,.12);
+      mix-blend-mode: screen;
+      transition:
+        width .12s ease,
+        height .12s ease,
+        opacity .15s ease,
+        border-radius .12s ease;
+    }
+
+    .dream-cursor::before,
+    .dream-cursor::after {
+      content: "";
+      position: absolute;
+      inset: 50% auto auto 50%;
+      background: var(--cursor-main);
+      transform: translate(-50%, -50%);
+      box-shadow: 0 0 7px var(--cursor-glow);
+    }
+
+    .dream-cursor::before {
+      width: 2px;
+      height: 24px;
+    }
+
+    .dream-cursor::after {
+      width: 24px;
+      height: 2px;
+    }
+
+    .dream-cursor-trail {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(215,199,255,.28);
+      box-shadow:
+        0 0 8px var(--cursor-glow),
+        0 0 12px var(--cursor-accent);
+      filter: blur(.2px);
+      opacity: .55;
+      transition: opacity .16s ease;
+    }
+
+    .dream-cursor.hovering {
+      width: 28px;
+      height: 28px;
+      border-radius: 38% 62% 55% 45%;
+      animation: cursorDreamPulse .8s ease-in-out infinite alternate;
+    }
+
+    .dream-cursor.clicking {
+      width: 11px;
+      height: 11px;
+      box-shadow:
+        0 0 10px var(--cursor-main),
+        0 0 24px var(--cursor-accent);
+    }
+
+    .ghost-mode .dream-cursor {
+      animation: cursorGhostGlitch .45s steps(2,end) infinite;
+      border-color: rgba(255,255,255,.95);
+      box-shadow:
+        -4px 0 8px rgba(90,240,255,.45),
+        4px 0 8px rgba(255,80,190,.42),
+        0 0 20px rgba(215,199,255,.5);
+    }
+
+    @keyframes cursorDreamPulse {
+      from { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+      to { transform: translate(-50%, -50%) rotate(18deg) scale(1.08); }
+    }
+
+    @keyframes cursorGhostGlitch {
+      0%, 100% { transform: translate(-50%, -50%) translate(0,0); }
+      33% { transform: translate(-50%, -50%) translate(-2px,1px); }
+      66% { transform: translate(-50%, -50%) translate(2px,-1px); }
+    }
+
+    @media (hover: none), (pointer: coarse) {
+      html, body, button, a, input, .file, .desktop-icon, .start-item, .occult-mark {
+        cursor: auto !important;
+      }
+      .dream-cursor,
+      .dream-cursor-trail {
+        display: none !important;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .dream-cursor,
+      .dream-cursor-trail {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+  
+    /* DREAMGAZE ARROW CURSOR — override */
+    .dream-cursor {
+      width: 0 !important;
+      height: 0 !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      mix-blend-mode: normal;
+      transform: none;
+      transition: filter .12s ease, opacity .15s ease;
+    }
+
+    .dream-cursor::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 19px;
+      height: 25px;
+      background: #eee8ff;
+      clip-path: polygon(0 0, 0 88%, 5px 68%, 9px 91%, 13px 89%, 9px 66%, 18px 66%);
+      transform: none;
+      filter:
+        drop-shadow(1px 1px 0 rgba(8,7,13,.95))
+        drop-shadow(0 0 4px rgba(168,240,237,.50))
+        drop-shadow(0 0 7px rgba(215,199,255,.30));
+      box-shadow: none;
+    }
+
+    .dream-cursor::after {
+      content: "";
+      position: absolute;
+      left: 3px;
+      top: 4px;
+      width: 2px;
+      height: 9px;
+      background: rgba(255,255,255,.68);
+      transform: rotate(-15deg);
+      box-shadow: 0 0 4px rgba(255,255,255,.35);
+    }
+
+    .dream-cursor.hovering {
+      width: 0 !important;
+      height: 0 !important;
+      border-radius: 0 !important;
+      animation: none !important;
+      filter: drop-shadow(0 0 5px rgba(231,155,220,.55));
+    }
+
+    .dream-cursor.hovering::before {
+      background: #fff5ff;
+      filter:
+        drop-shadow(1px 1px 0 rgba(8,7,13,.95))
+        drop-shadow(0 0 5px rgba(231,155,220,.68))
+        drop-shadow(0 0 9px rgba(168,240,237,.38));
+    }
+
+    .dream-cursor.clicking {
+      width: 0 !important;
+      height: 0 !important;
+      box-shadow: none !important;
+      filter: brightness(1.35);
+    }
+
+    .ghost-mode .dream-cursor {
+      animation: cursorArrowGhost .45s steps(2,end) infinite !important;
+      border: 0 !important;
+      box-shadow: none !important;
+    }
+
+    .ghost-mode .dream-cursor::before {
+      filter:
+        drop-shadow(-2px 0 2px rgba(90,240,255,.65))
+        drop-shadow(2px 0 2px rgba(255,80,190,.60))
+        drop-shadow(1px 1px 0 rgba(8,7,13,.95));
+    }
+
+    @keyframes cursorArrowGhost {
+      0%,100% { transform: translate(0,0); }
+      33% { transform: translate(-1px,1px); }
+      66% { transform: translate(1px,-1px); }
+    }
+
+  
+    /* =========================================================
+       DEFAULT THEME: DREAMGAZE_PDX
+       Inspired by the supplied poster: black/plum, hot pink,
+       nocturnal green, CRT bleed and soft chromatic separation.
+       ========================================================= */
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) {
+      --bg: #090b0f;
+      --panel: #211820;
+      --panel-2: #382536;
+      --panel-3: #7d4969;
+      --ink: #f7e8ed;
+      --muted: #bfa9b1;
+      --violet: #e47bad;
+      --lilac: #ffc8df;
+      --magenta: #f47db3;
+      --cyan: #76c7a5;
+      --shadow: #050508;
+      background:
+        radial-gradient(circle at 18% 15%, rgba(244,125,179,.22), transparent 25%),
+        radial-gradient(circle at 76% 30%, rgba(66,145,111,.18), transparent 30%),
+        radial-gradient(circle at 62% 76%, rgba(242,107,174,.17), transparent 26%),
+        linear-gradient(155deg, #07090c 0%, #141117 38%, #241522 68%, #07110e 100%);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .desktop {
+      background:
+        linear-gradient(116deg, transparent 0 58%, rgba(255,126,188,.14) 58.3% 58.8%, transparent 59.1%),
+        linear-gradient(105deg, transparent 0 69%, rgba(95,184,143,.08) 69.2% 69.8%, transparent 70.2%),
+        radial-gradient(ellipse at 72% 70%, rgba(239,113,179,.18), transparent 26%),
+        radial-gradient(ellipse at 30% 34%, rgba(67,139,106,.10), transparent 32%);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .taskbar {
+      background: #181117;
+      border-top-color: #824969;
+      box-shadow: inset 0 1px 0 rgba(244,125,179,.22);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .retro-btn {
+      background: #301f2d;
+      color: #f6e6ec;
+      border-top-color: #825873;
+      border-left-color: #825873;
+      border-right-color: #08070a;
+      border-bottom-color: #08070a;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .tray {
+      background: #120e13;
+      color: #bca6af;
+      border-bottom-color: #5d3b52;
+      border-right-color: #5d3b52;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .window {
+      background: #1e171e;
+      border-top-color: #7a4e6b;
+      border-left-color: #7a4e6b;
+      box-shadow:
+        7px 7px 0 rgba(0,0,0,.34),
+        -2px 0 13px rgba(83,163,126,.035),
+        2px 0 14px rgba(240,111,166,.05);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .titlebar {
+      background: linear-gradient(90deg, #b64f83 0%, #814162 44%, #31594e 100%);
+      text-shadow: -1px 0 rgba(96,207,159,.20), 1px 0 rgba(255,112,177,.22);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .window.inactive .titlebar {
+      background: linear-gradient(90deg, #51364a, #293b38);
+      color: #c7b2ba;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .menubar {
+      background: #21181f;
+      color: #bcaab1;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .window-body,
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .files {
+      background: #110f13;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .tree {
+      background: #0b0d0e;
+      color: #afa1a6;
+      border-right-color: #59374e;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .panel,
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .timeline-item,
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .project-card {
+      background: #1a1419;
+      border-color: #59364e;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .timeline-item {
+      border-left-color: #f087ba;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .tag {
+      background: #321f30;
+      border-color: #7c4b6a;
+      color: #f6bfd9;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .terminal {
+      background: #070a09;
+      color: #f0afd0;
+      text-shadow: 0 0 6px rgba(239,95,142,.12);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .terminal input {
+      color: #f5dce4;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .desktop-icon .icon {
+      color: #ffd0e3;
+      background: linear-gradient(135deg, rgba(86,161,126,.14), rgba(239,95,142,.20), rgba(66,115,91,.12));
+      border-color: rgba(246,145,197,.38);
+      text-shadow:
+        -1px 0 rgba(83,181,139,.35),
+        1px 0 rgba(255,111,184,.42),
+        0 0 8px rgba(245,126,184,.28);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .wallpaper-title {
+      color: rgba(255,139,195,.24);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .wallpaper-title h1 {
+      color: rgba(255,132,193,.26);
+      text-shadow:
+        -3px 0 rgba(72,167,126,.13),
+        3px 0 rgba(255,111,184,.16),
+        0 0 24px rgba(246,112,183,.16);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .mist.one {
+      background: rgba(226,99,169,.16);
+    }
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .mist.two {
+      background: rgba(55,126,97,.11);
+    }
+
+    /* The previous default purple palette is now selectable as SPECTRAL. */
+    body.theme-spectral {
+      --bg: #0b1020;
+      --panel: #24233d;
+      --panel-2: #343255;
+      --panel-3: #514875;
+      --ink: #f5f1ff;
+      --muted: #b8b8dc;
+      --violet: #8d82ff;
+      --lilac: #d7c7ff;
+      --magenta: #e79bdc;
+      --cyan: #a8f0ed;
+      --shadow: #0d0815;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(168,240,237,.12), transparent 24%),
+        radial-gradient(circle at 68% 42%, rgba(141,130,255,.20), transparent 31%),
+        radial-gradient(circle at 78% 78%, rgba(231,155,220,.14), transparent 25%),
+        linear-gradient(145deg, #07101d 0%, #17172d 38%, #261d3b 68%, #0c1523 100%);
+    }
+
+    body.theme-spectral .taskbar { background:#271d38; border-top-color:#6d568b; }
+    body.theme-spectral .retro-btn {
+      background:#352747; color:#f5f1ff;
+      border-top-color:#6c5687; border-left-color:#6c5687;
+      border-right-color:#120b1c; border-bottom-color:#120b1c;
+    }
+    body.theme-spectral .tray { background:#21182f; color:#b8b8dc; }
+    body.theme-spectral .window { background:#21182f; border-top-color:#6d568b; border-left-color:#6d568b; }
+    body.theme-spectral .titlebar { background:linear-gradient(90deg,#4c477e,#55426f 52%,#263d55); }
+    body.theme-spectral .menubar { background:#2a1f39; color:#b8b8dc; }
+    body.theme-spectral .window-body { background:#181120; color:#f5f1ff; }
+    body.theme-spectral .files { background:#1c1426; }
+    body.theme-spectral .tree { background:#15101d; color:#b8b8dc; }
+    body.theme-spectral .panel,
+    body.theme-spectral .timeline-item,
+    body.theme-spectral .project-card { background:#21172e; }
+    body.theme-spectral .tag { background:#2f2143; border-color:#604782; color:#dbc8f5; }
+    body.theme-spectral .terminal { background:#09070d; color:#d7bcff; }
+
+    /* Shutdown refinement */
+    .shutdown-status {
+      min-height: 18px;
+      margin-top: 10px;
+      color: rgba(201,167,255,.72);
+      font-size: 11px;
+      letter-spacing: .08em;
+    }
+
+  
+    /* =========================================================
+       DREAMGAZE DEFAULT — CONSISTENCY PASS
+       Start menu, shutdown and secondary system surfaces now
+       inherit the same pink/black/green visual language.
+       ========================================================= */
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .start-menu {
+      background:
+        linear-gradient(145deg, rgba(48,31,45,.98), rgba(19,15,20,.99));
+      border-top-color: #8d5576;
+      border-left-color: #8d5576;
+      border-right-color: #080609;
+      border-bottom-color: #080609;
+      box-shadow:
+        6px 6px 0 rgba(0,0,0,.38),
+        0 0 18px rgba(244,125,179,.08);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .start-head {
+      background: linear-gradient(90deg, #b64f83 0%, #814162 58%, #31594e 100%);
+      color: #fff0f6;
+      text-shadow:
+        -1px 0 rgba(86,185,143,.25),
+        1px 0 rgba(255,111,184,.28);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .start-item {
+      color: #f3dce7;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .start-item:hover {
+      background: linear-gradient(90deg, #9e466f, #6e3d59);
+      color: #fff7fb;
+      outline-color: rgba(255,190,220,.35);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .shutdown {
+      background:
+        radial-gradient(circle at 50% 42%, rgba(244,125,179,.09), transparent 26%),
+        radial-gradient(circle at 64% 62%, rgba(70,145,111,.055), transparent 30%),
+        #07070a;
+      color: #f3dce7;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .shutdown h2 {
+      color: #f3a7ca;
+      text-shadow:
+        -2px 0 rgba(82,173,133,.16),
+        2px 0 rgba(255,92,172,.18),
+        0 0 18px rgba(244,125,179,.13);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .shutdown p {
+      color: #c9aeba;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .shutdown-status {
+      color: #dc7fad;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .shutdown .retro-btn {
+      background: #321f30;
+      color: #f9e7ef;
+      border-top-color: #8d5576;
+      border-left-color: #8d5576;
+      border-right-color: #09070a;
+      border-bottom-color: #09070a;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .shutdown .retro-btn:hover {
+      background: #4a2941;
+    }
+
+    /* Small system surfaces that previously retained purple defaults */
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .toast {
+      background: #2d1d2b;
+      color: #f4dce8;
+      border-top-color: #80506f;
+      border-left-color: #80506f;
+      border-right-color: #09070a;
+      border-bottom-color: #09070a;
+      box-shadow: 4px 4px 0 rgba(0,0,0,.32);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .task-btn {
+      background: #2d1d2b;
+      color: #eecfe0;
+      border-top-color: #754a66;
+      border-left-color: #754a66;
+      border-right-color: #09070a;
+      border-bottom-color: #09070a;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .task-btn.active {
+      background: #4a2941;
+      color: #fff0f7;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .skill-bar {
+      background: #100d11;
+      border-color: #56374c;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .skill-fill {
+      background: linear-gradient(90deg, #d9689d, #f394bd 64%, #668f7c);
+    }
+
+  
+    /* START MENU — final Dreamgaze consistency */
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .start-rail {
+      background:
+        linear-gradient(
+          180deg,
+          #5b2f4f 0%,
+          #3f263c 42%,
+          #233932 100%
+        );
+      color: #ffd2e5;
+      text-shadow:
+        -1px 0 rgba(84,180,139,.25),
+        1px 0 rgba(255,110,183,.28),
+        0 0 8px rgba(244,125,179,.12);
+      border-right: 1px solid rgba(245,130,185,.18);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .start-items {
+      background:
+        linear-gradient(
+          180deg,
+          rgba(38,24,35,.98),
+          rgba(19,15,20,.99)
+        );
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .separator {
+      background: linear-gradient(
+        90deg,
+        rgba(238,120,174,.12),
+        rgba(238,120,174,.42),
+        rgba(90,163,127,.18)
+      );
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .start-item {
+      color: #f0d8e4;
+      text-shadow: 0 0 5px rgba(244,125,179,.06);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .start-item:hover {
+      background:
+        linear-gradient(
+          90deg,
+          rgba(174,77,126,.95),
+          rgba(126,63,96,.93) 58%,
+          rgba(54,91,78,.88)
+        );
+      color: #fff5fa;
+    }
+
+  
+    /* ==========================
+       PSYCHEDELIC DESKTOP RIPPLE
+       Only decorative; never receives pointer events.
+       ========================== */
+    .psy-ripple {
+      position: absolute;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 2;
+      transform: translate(-50%, -50%) scale(.2);
+      opacity: 0;
+      background:
+        radial-gradient(circle,
+          rgba(255,210,232,.22) 0 8%,
+          rgba(244,125,179,.18) 9% 22%,
+          rgba(106,190,151,.13) 23% 36%,
+          rgba(208,103,166,.08) 37% 52%,
+          transparent 53%);
+      box-shadow:
+        0 0 18px rgba(244,125,179,.12),
+        0 0 32px rgba(89,172,132,.08);
+      mix-blend-mode: screen;
+      animation: psyRipple 1.7s ease-out forwards;
+    }
+
+    @keyframes psyRipple {
+      0% {
+        opacity: .9;
+        transform: translate(-50%, -50%) scale(.25) rotate(0deg);
+        filter: hue-rotate(0deg) blur(0);
+      }
+      45% {
+        opacity: .48;
+        transform: translate(-50%, -50%) scale(5.8) rotate(10deg);
+        filter: hue-rotate(18deg) blur(.3px);
+      }
+      100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(10.5) rotate(-8deg);
+        filter: hue-rotate(-12deg) blur(1px);
+      }
+    }
+
+    /* ==========================
+       RETRO DREAM RADIO / SPOTIFY
+       ========================== */
+    .retro-player {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 8px;
+      height: 100%;
+      padding: 10px;
+      background:
+        linear-gradient(180deg, rgba(52,33,49,.98), rgba(18,14,19,.99));
+      border-top: 2px solid #8b5576;
+      border-left: 2px solid #8b5576;
+      border-right: 2px solid #080709;
+      border-bottom: 2px solid #080709;
+      box-shadow:
+        inset 0 0 0 1px rgba(255,210,232,.04),
+        inset 0 0 22px rgba(244,125,179,.035);
+    }
+
+    .retro-player-display {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 48px;
+      padding: 8px 10px;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,.012) 0 1px,
+          transparent 1px 3px
+        ),
+        #070b0a;
+      border-top: 2px solid #080709;
+      border-left: 2px solid #080709;
+      border-right: 2px solid #69475d;
+      border-bottom: 2px solid #69475d;
+      color: #e993bd;
+      text-shadow:
+        0 0 7px rgba(244,125,179,.30),
+        -1px 0 rgba(95,183,144,.16);
+      font-size: 11px;
+      line-height: 1.45;
+    }
+
+    .retro-player-led {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+    }
+
+    .retro-player-led i {
+      width: 6px;
+      height: 6px;
+      display: block;
+      border-radius: 50%;
+      background: #73b99a;
+      box-shadow: 0 0 7px rgba(115,185,154,.42);
+      animation: playerLed 2.2s steps(2,end) infinite;
+    }
+
+    .retro-player-led i:nth-child(2) {
+      background: #e47bad;
+      box-shadow: 0 0 7px rgba(228,123,173,.4);
+      animation-delay: -.8s;
+    }
+
+    @keyframes playerLed {
+      50% { opacity: .3; }
+    }
+
+    .retro-player-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #cbb2bf;
+      font-size: 10px;
+    }
+
+    .retro-player-chip {
+      padding: 3px 6px;
+      border: 1px solid #624258;
+      background: #21161f;
+      color: #eeb1cf;
+    }
+
+    .retro-player-volume-note {
+      margin-left: auto;
+      color: #8f7c86;
+      white-space: nowrap;
+    }
+
+    .spotify-bezel {
+      position: relative;
+      min-height: 0;
+      padding: 5px;
+      background: #080809;
+      border-top: 2px solid #080709;
+      border-left: 2px solid #080709;
+      border-right: 2px solid #724b64;
+      border-bottom: 2px solid #724b64;
+      overflow: hidden;
+    }
+
+    .spotify-bezel::after {
+      content: "";
+      position: absolute;
+      inset: 5px;
+      pointer-events: none;
+      z-index: 2;
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          rgba(255,255,255,.012) 0 1px,
+          transparent 1px 4px
+        );
+      mix-blend-mode: screen;
+      opacity: .45;
+    }
+
+    .spotify-bezel .spotify-frame {
+      display: block;
+      height: 100%;
+      min-height: 300px;
+      border-radius: 0 !important;
+      filter: saturate(.82) contrast(1.04) brightness(.92);
+    }
+
+    @media (max-width: 720px) {
+      .retro-player-volume-note { display: none; }
+      .spotify-bezel .spotify-frame { min-height: 360px; }
+    }
+
+  
+    /* =========================================================
+       FINAL CURSOR STABILITY
+       Native cursor everywhere. This avoids cross-origin iframe
+       cursor freezing and cannot interfere with clicks.
+       ========================================================= */
+    html, body, body *, body *::before, body *::after {
+      cursor: auto !important;
+    }
+
+    button,
+    a,
+    input,
+    .file,
+    .desktop-icon,
+    .start-item,
+    .occult-mark,
+    [data-open],
+    .task-btn {
+      cursor: pointer !important;
+    }
+
+    .titlebar {
+      cursor: move !important;
+    }
+
+    #dreamCursor,
+    #dreamCursorTrail {
+      display: none !important;
+      pointer-events: none !important;
+    }
+
+    /* =========================================================
+       SPOTIFY WINDOW — RESPONSIVE FINAL PASS
+       The outer OS window never scrolls; Spotify fills the
+       remaining space and handles its own internal UI.
+       ========================================================= */
+    #win-music .window-body {
+      padding: 8px !important;
+      overflow: hidden !important;
+      min-height: 0;
+    }
+
+    #win-music .music-shell {
+      display: block;
+      height: 100%;
+      min-height: 0;
+    }
+
+    #win-music .retro-player {
+      height: 100%;
+      min-height: 0;
+      grid-template-rows: auto auto minmax(0, 1fr);
+      overflow: hidden;
+    }
+
+    #win-music .retro-player-controls {
+      flex-wrap: wrap;
+      flex: 0 0 auto;
+    }
+
+    #win-music .spotify-bezel {
+      width: 100%;
+      height: 100%;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    #win-music .spotify-frame {
+      width: 100% !important;
+      height: 100% !important;
+      min-width: 0 !important;
+      min-height: 0 !important;
+      display: block;
+      border: 0;
+    }
+
+    @media (max-width: 720px) {
+      #win-music .window-body { padding: 5px !important; }
+      #win-music .retro-player { padding: 6px; gap: 6px; }
+      #win-music .spotify-frame { min-height: 0 !important; }
+    }
+
+  
+    /* =========================================================
+       SPOTIFY EMBED — SCALE TO WINDOW
+       Spotify's internal embed UI has a compact intrinsic layout.
+       We keep a stable base size and scale the whole iframe so the
+       visible player grows/shrinks with the OS window.
+       ========================================================= */
+    #win-music .spotify-bezel {
+      position: relative;
+      display: grid;
+      place-items: center;
+      overflow: hidden !important;
+      min-width: 0;
+      min-height: 0;
+    }
+
+    #win-music .spotify-frame {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 460px !important;
+      height: 352px !important;
+      min-width: 460px !important;
+      min-height: 352px !important;
+      max-width: none !important;
+      max-height: none !important;
+      transform-origin: center center;
+      border: 0;
+    }
+
+  
+    /* =========================================================
+       SNAKE.EXE — THEME CONSISTENCY + DREAM HAZE
+       ========================================================= */
+    #win-snake .window-body {
+      background:
+        radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--magenta) 7%, transparent), transparent 30%),
+        radial-gradient(circle at 72% 68%, color-mix(in srgb, var(--cyan) 6%, transparent), transparent 34%),
+        color-mix(in srgb, var(--bg) 80%, #000);
+    }
+
+    #win-snake .snake-panel {
+      background: color-mix(in srgb, var(--panel) 86%, #000);
+      border-top-color: color-mix(in srgb, var(--panel-3) 70%, #fff 5%);
+      border-left-color: color-mix(in srgb, var(--panel-3) 70%, #fff 5%);
+      border-right-color: color-mix(in srgb, var(--shadow) 90%, #000);
+      border-bottom-color: color-mix(in srgb, var(--shadow) 90%, #000);
+      color: var(--ink);
+    }
+
+    #win-snake .snake-score {
+      color: var(--lilac);
+      text-shadow: 0 0 8px color-mix(in srgb, var(--lilac) 32%, transparent);
+    }
+
+    #win-snake .snake-help {
+      color: var(--muted);
+    }
+
+    #win-snake #snakeCanvas {
+      background: color-mix(in srgb, var(--bg) 74%, #000);
+      border-color: color-mix(in srgb, var(--panel-3) 82%, var(--magenta) 18%);
+      box-shadow:
+        inset 0 0 0 2px color-mix(in srgb, var(--shadow) 82%, #000),
+        inset 0 0 28px color-mix(in srgb, var(--magenta) 5%, transparent),
+        0 0 18px color-mix(in srgb, var(--cyan) 5%, transparent);
+    }
+
+  
+    /* =========================================================
+       DREAMGAZE — PINK FOG FINAL VISUAL PASS
+       More luminous pink haze, still dark enough for readability.
+       ========================================================= */
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) {
+      --panel: #241922;
+      --panel-2: #3d2739;
+      --panel-3: #8a5074;
+      --violet: #ea8cbb;
+      --lilac: #ffd1e5;
+      --magenta: #f58abc;
+      background:
+        radial-gradient(circle at 17% 14%, rgba(255,143,196,.29), transparent 28%),
+        radial-gradient(circle at 78% 28%, rgba(94,180,143,.14), transparent 31%),
+        radial-gradient(circle at 60% 72%, rgba(248,115,181,.25), transparent 32%),
+        radial-gradient(circle at 38% 88%, rgba(255,178,215,.12), transparent 27%),
+        linear-gradient(155deg, #08090c 0%, #171119 36%, #2c1727 67%, #08110f 100%);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .desktop {
+      background:
+        radial-gradient(ellipse at 17% 28%, rgba(255,152,201,.15), transparent 27%),
+        radial-gradient(ellipse at 70% 63%, rgba(246,111,179,.20), transparent 34%),
+        radial-gradient(ellipse at 84% 22%, rgba(100,190,150,.08), transparent 24%),
+        linear-gradient(116deg, transparent 0 58%, rgba(255,132,190,.12) 58.3% 58.9%, transparent 59.2%),
+        linear-gradient(105deg, transparent 0 69%, rgba(105,192,151,.07) 69.2% 69.8%, transparent 70.2%);
+    }
+
+    /* Extra luminous haze layers using existing mist elements. */
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .mist {
+      filter: blur(34px);
+      mix-blend-mode: screen;
+      opacity: .68;
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .mist.one {
+      background:
+        radial-gradient(ellipse at center,
+          rgba(255,150,202,.30) 0%,
+          rgba(239,105,175,.16) 42%,
+          transparent 72%);
+      box-shadow: 0 0 90px rgba(246,119,181,.10);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .mist.two {
+      background:
+        radial-gradient(ellipse at center,
+          rgba(255,184,218,.22) 0%,
+          rgba(98,186,148,.08) 48%,
+          transparent 74%);
+      box-shadow: 0 0 100px rgba(255,148,199,.09);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .wallpaper-title h1 {
+      color: rgba(255,151,202,.27);
+      text-shadow:
+        -3px 0 rgba(87,177,139,.13),
+        3px 0 rgba(255,105,181,.18),
+        0 0 22px rgba(255,143,197,.20),
+        0 0 55px rgba(239,103,174,.10);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .window {
+      box-shadow:
+        7px 7px 0 rgba(0,0,0,.34),
+        -2px 0 16px rgba(90,175,138,.035),
+        2px 0 22px rgba(247,128,187,.075);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .titlebar {
+      background: linear-gradient(90deg, #bd5889 0%, #914767 50%, #365f53 100%);
+      box-shadow: inset 0 1px rgba(255,196,222,.10);
+    }
+
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) .desktop-icon .icon {
+      color: #ffd7e8;
+      background:
+        linear-gradient(135deg,
+          rgba(96,176,139,.11),
+          rgba(250,132,189,.25),
+          rgba(92,143,118,.09));
+      border-color: rgba(250,151,199,.42);
+      text-shadow:
+        -1px 0 rgba(83,181,139,.28),
+        1px 0 rgba(255,112,185,.45),
+        0 0 11px rgba(247,132,189,.34);
+      box-shadow: 0 0 18px rgba(247,132,189,.055);
+    }
+
+    /* Snake receives a slightly stronger fog in the default theme. */
+    body:not(.theme-spectral):not(.theme-moonmilk):not(.theme-rosefog):not(.theme-liminalsea) #win-snake #snakeCanvas {
+      box-shadow:
+        inset 0 0 0 2px rgba(6,5,8,.9),
+        inset 0 0 38px rgba(248,126,188,.09),
+        0 0 25px rgba(248,133,191,.10);
+    }
+
+  
+    /* =========================================================
+       FINAL THEME CONSISTENCY LAYER
+       All major OS surfaces derive from the active theme vars.
+       ========================================================= */
+
+    /* START MENU */
+    body .start-menu {
+      background:
+        linear-gradient(
+          145deg,
+          color-mix(in srgb, var(--panel-2) 92%, #000),
+          color-mix(in srgb, var(--panel) 82%, #000)
+        ) !important;
+      border-top-color: color-mix(in srgb, var(--panel-3) 82%, var(--lilac) 18%) !important;
+      border-left-color: color-mix(in srgb, var(--panel-3) 82%, var(--lilac) 18%) !important;
+      border-right-color: color-mix(in srgb, var(--shadow) 92%, #000) !important;
+      border-bottom-color: color-mix(in srgb, var(--shadow) 92%, #000) !important;
+      box-shadow:
+        6px 6px 0 rgba(0,0,0,.34),
+        0 0 18px color-mix(in srgb, var(--magenta) 8%, transparent) !important;
+    }
+
+    body .start-rail {
+      background:
+        linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--magenta) 42%, var(--panel-2)),
+          color-mix(in srgb, var(--panel-2) 85%, #000) 52%,
+          color-mix(in srgb, var(--cyan) 22%, var(--panel)) 100%
+        ) !important;
+      color: var(--lilac) !important;
+      border-right: 1px solid color-mix(in srgb, var(--lilac) 18%, transparent) !important;
+      text-shadow:
+        -1px 0 color-mix(in srgb, var(--cyan) 28%, transparent),
+        1px 0 color-mix(in srgb, var(--magenta) 32%, transparent),
+        0 0 8px color-mix(in srgb, var(--lilac) 15%, transparent) !important;
+    }
+
+    body .start-items {
+      background:
+        linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--panel-2) 88%, #000),
+          color-mix(in srgb, var(--panel) 80%, #000)
+        ) !important;
+    }
+
+    body .start-item {
+      color: var(--ink) !important;
+    }
+
+    body .start-item:hover {
+      background:
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--magenta) 52%, var(--panel-2)),
+          color-mix(in srgb, var(--violet) 36%, var(--panel-2)) 58%,
+          color-mix(in srgb, var(--cyan) 22%, var(--panel-2))
+        ) !important;
+      color: var(--white) !important;
+    }
+
+    body .separator {
+      background:
+        linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--magenta) 10%, transparent),
+          color-mix(in srgb, var(--magenta) 42%, transparent),
+          color-mix(in srgb, var(--cyan) 18%, transparent)
+        ) !important;
+    }
+
+    /* SHUTDOWN */
+    body .shutdown {
+      background:
+        radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--magenta) 9%, transparent), transparent 28%),
+        radial-gradient(circle at 64% 62%, color-mix(in srgb, var(--cyan) 5%, transparent), transparent 31%),
+        color-mix(in srgb, var(--bg) 72%, #000) !important;
+      color: var(--ink) !important;
+    }
+
+    body .shutdown h2 {
+      color: var(--lilac) !important;
+      text-shadow:
+        -2px 0 color-mix(in srgb, var(--cyan) 16%, transparent),
+        2px 0 color-mix(in srgb, var(--magenta) 18%, transparent),
+        0 0 18px color-mix(in srgb, var(--magenta) 13%, transparent) !important;
+    }
+
+    body .shutdown p,
+    body .shutdown-status {
+      color: var(--muted) !important;
+    }
+
+    /* SPOTIFY / DREAM RADIO SHELL
+       The official iframe remains cross-origin, but its chassis and
+       overall compositing now follow the selected theme. */
+    body #win-music .retro-player {
+      background:
+        linear-gradient(
+          180deg,
+          color-mix(in srgb, var(--panel-2) 90%, #000),
+          color-mix(in srgb, var(--panel) 78%, #000)
+        ) !important;
+      border-top-color: color-mix(in srgb, var(--panel-3) 80%, var(--lilac) 20%) !important;
+      border-left-color: color-mix(in srgb, var(--panel-3) 80%, var(--lilac) 20%) !important;
+      border-right-color: color-mix(in srgb, var(--shadow) 94%, #000) !important;
+      border-bottom-color: color-mix(in srgb, var(--shadow) 94%, #000) !important;
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--lilac) 4%, transparent),
+        inset 0 0 24px color-mix(in srgb, var(--magenta) 4%, transparent),
+        0 0 18px color-mix(in srgb, var(--magenta) 5%, transparent) !important;
+    }
+
+    body #win-music .retro-player-display {
+      background:
+        repeating-linear-gradient(
+          to bottom,
+          color-mix(in srgb, var(--ink) 1.2%, transparent) 0 1px,
+          transparent 1px 3px
+        ),
+        color-mix(in srgb, var(--bg) 62%, #000) !important;
+      border-top-color: color-mix(in srgb, var(--shadow) 92%, #000) !important;
+      border-left-color: color-mix(in srgb, var(--shadow) 92%, #000) !important;
+      border-right-color: color-mix(in srgb, var(--panel-3) 68%, #000) !important;
+      border-bottom-color: color-mix(in srgb, var(--panel-3) 68%, #000) !important;
+      color: var(--lilac) !important;
+      text-shadow:
+        0 0 7px color-mix(in srgb, var(--magenta) 30%, transparent),
+        -1px 0 color-mix(in srgb, var(--cyan) 16%, transparent) !important;
+    }
+
+    body #win-music .retro-player-display span {
+      color: var(--cyan) !important;
+    }
+
+    body #win-music .retro-player-chip {
+      background: color-mix(in srgb, var(--panel) 82%, #000) !important;
+      border-color: color-mix(in srgb, var(--panel-3) 64%, #000) !important;
+      color: var(--lilac) !important;
+    }
+
+    body #win-music .spotify-bezel {
+      background: color-mix(in srgb, var(--bg) 64%, #000) !important;
+      border-top-color: color-mix(in srgb, var(--shadow) 92%, #000) !important;
+      border-left-color: color-mix(in srgb, var(--shadow) 92%, #000) !important;
+      border-right-color: color-mix(in srgb, var(--panel-3) 72%, #000) !important;
+      border-bottom-color: color-mix(in srgb, var(--panel-3) 72%, #000) !important;
+      box-shadow:
+        inset 0 0 22px color-mix(in srgb, var(--magenta) 4%, transparent),
+        0 0 14px color-mix(in srgb, var(--cyan) 3%, transparent) !important;
+    }
+
+    body #win-music .retro-player-led i:first-child {
+      background: var(--cyan) !important;
+      box-shadow: 0 0 7px color-mix(in srgb, var(--cyan) 42%, transparent) !important;
+    }
+
+    body #win-music .retro-player-led i:nth-child(2) {
+      background: var(--magenta) !important;
+      box-shadow: 0 0 7px color-mix(in srgb, var(--magenta) 42%, transparent) !important;
+    }
+
+    /* Gentle theme-dependent compositing over the external Spotify iframe.
+       This does not alter or access Spotify's internal DOM. */
+    body #win-music .spotify-frame {
+      filter:
+        saturate(.82)
+        contrast(1.04)
+        brightness(.92)
+        drop-shadow(0 0 7px color-mix(in srgb, var(--magenta) 6%, transparent)) !important;
+    }
+
+    /* TASKBAR / TRAY */
+    body .taskbar {
+      background: color-mix(in srgb, var(--panel) 88%, #000) !important;
+      border-top-color: color-mix(in srgb, var(--panel-3) 78%, var(--lilac) 12%) !important;
+      box-shadow: inset 0 1px 0 color-mix(in srgb, var(--lilac) 7%, transparent) !important;
+    }
+
+    body .tray {
+      background: color-mix(in srgb, var(--panel) 76%, #000) !important;
+      color: var(--muted) !important;
+      border-color: color-mix(in srgb, var(--panel-3) 44%, #000) !important;
+    }
+
+    body .task-btn {
+      background: color-mix(in srgb, var(--panel-2) 86%, #000) !important;
+      color: var(--ink) !important;
+      border-top-color: color-mix(in srgb, var(--panel-3) 72%, #000) !important;
+      border-left-color: color-mix(in srgb, var(--panel-3) 72%, #000) !important;
+      border-right-color: color-mix(in srgb, var(--shadow) 92%, #000) !important;
+      border-bottom-color: color-mix(in srgb, var(--shadow) 92%, #000) !important;
+    }
+
+    /* TOAST / NOTIFICATION */
+    body .toast {
+      background: color-mix(in srgb, var(--panel) 88%, #000) !important;
+      border-color: color-mix(in srgb, var(--magenta) 48%, var(--panel-3)) !important;
+      color: var(--lilac) !important;
+      box-shadow:
+        4px 4px 0 rgba(0,0,0,.30),
+        0 0 14px color-mix(in srgb, var(--magenta) 5%, transparent) !important;
+    }
+
+    /* SNAKE: reinforce inherited theme on every visible component. */
+    body #win-snake .snake-panel {
+      background: color-mix(in srgb, var(--panel) 86%, #000) !important;
+      color: var(--ink) !important;
+    }
+
+    body #win-snake .snake-score {
+      color: var(--lilac) !important;
+    }
+
+    body #win-snake .snake-help {
+      color: var(--muted) !important;
+    }
+
+  </style>
+</head>
+<body>
+  
+  <div class="dream-cursor-trail" id="dreamCursorTrail" aria-hidden="true"></div>
+  <div class="dream-cursor" id="dreamCursor" aria-hidden="true"></div>
+
+  <main class="desktop" id="desktop" aria-label="Desktop TatsuyaDesire/97">
+    <div class="stars" id="stars"></div>
+    <div class="mist one"></div>
+    <div class="mist two"></div>
+    <div class="raven" style="top:14%;animation-delay:-4s"></div>
+    <div class="raven" style="top:22%;animation-delay:-11s"></div>
+    <div class="occult-mark" id="occultMark" title="...">☾</div>
+
+    <div class="wallpaper-title" aria-hidden="true">
+      <h1>TatsuyaDesire/97</h1>
+      <p>A DREAM STORED ON DISK</p>
+    </div>
+
+    <section class="desktop-icons" aria-label="Ícones do desktop">
+      <div class="desktop-icon" data-open="computer" tabindex="0">
+        <span class="icon">▣</span><span>Meu Computador</span>
+      </div>
+      <div class="desktop-icon" data-open="about" tabindex="0">
+        <span class="icon">☺</span><span>Sobre Mim</span>
+      </div>
+      <div class="desktop-icon" data-open="experience" tabindex="0">
+        <span class="icon">▤</span><span>Experiência</span>
+      </div>
+      <div class="desktop-icon" data-open="projects" tabindex="0">
+        <span class="icon">▥</span><span>Projetos</span>
+      </div>
+      <div class="desktop-icon" data-open="skills" tabindex="0">
+        <span class="icon">◆</span><span>Skills.dll</span>
+      </div>
+      <div class="desktop-icon" data-open="competencies" tabindex="0">
+        <span class="icon">✦</span><span>Competências</span>
+      </div>
+      <div class="desktop-icon" data-open="terminal" tabindex="0">
+        <span class="icon">⌘</span><span>Terminal</span>
+      </div>
+      <div class="desktop-icon" data-open="music" tabindex="0">
+        <span class="icon">♫</span><span>Music Player</span>
+      </div>
+      <div class="desktop-icon" data-open="snake" tabindex="0">
+        <span class="icon">≈</span><span>Snake.exe</span>
+      </div>
+      <div class="desktop-icon" data-open="contact" tabindex="0">
+        <span class="icon">⌁</span><span>Contato</span>
+      </div>
+      <div class="desktop-icon" data-open="trash" tabindex="0">
+        <span class="icon">⌫</span><span>Lixeira</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="start-menu" id="startMenu">
+    <div class="start-rail">TatsuyaDesire/97</div>
+    <div class="start-items">
+      <div class="start-item" data-open="about">☺ Sobre</div>
+      <div class="start-item" data-open="experience">▤ Experiência</div>
+      <div class="start-item" data-open="projects">▥ Projetos</div>
+      <div class="start-item" data-open="competencies">✦ Competências</div>
+      <div class="separator"></div>
+      <div class="start-item" data-open="terminal">⌘ Terminal</div>
+      <div class="start-item" data-open="music">♫ Music Player</div>
+      <div class="start-item" data-open="snake">≈ Snake.exe</div>
+      <div class="start-item" data-open="contact">⌁ Internet / Contato</div>
+      <div class="separator"></div>
+      <div class="start-item" id="shutdownItem">⏻ Shutdown</div>
+    </div>
+  </div>
+
+  <footer class="taskbar">
+    <button class="retro-btn start-btn" id="startBtn">✦ Start</button>
+    <div class="task-list" id="taskList"></div>
+    <div class="tray">
+      <span class="net">◉ NET</span>
+      <button class="sound-toggle" id="soundToggle" type="button" title="Sound FX">♪ SFX</button>
+      <span id="clock">00:00</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+  <section class="shutdown" id="shutdownScreen">
+    <div>
+      <h2 id="shutdownTitle">It is now safe to leave this website.</h2>
+      <p id="shutdownText">TatsuyaDesire/97 has entered dream state.</p>
+      <div class="shutdown-status" id="shutdownStatus"></div>
+      <button class="retro-btn" id="restartBtn">Restart</button>
+    </div>
+  </section>
+
+  <!-- WINDOWS -->
+  <section class="window" id="win-computer" data-title="Meu Computador" style="left:160px;top:65px;width:620px;height:420px;">
+    <div class="titlebar">
+      <span>▣ Meu Computador</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn" aria-label="Minimizar">_</button>
+        <button class="retro-btn max-btn" aria-label="Maximizar">□</button>
+        <button class="retro-btn close-btn" aria-label="Fechar">×</button>
+      </div>
+    </div>
+    <div class="menubar"><span>File</span><span>Edit</span><span>View</span><span>Help</span></div>
+    <div class="window-body" style="padding:0;">
+      <div class="explorer">
+        <aside class="tree">
+          <strong>C:\</strong><br><br>
+          ├─ ABOUT<br>
+          ├─ EXPERIENCE<br>
+          ├─ PROJECTS<br>
+          ├─ SKILLS<br>
+          └─ CONTACT
+        </aside>
+        <div class="files">
+          <div class="file" data-open="about"><span class="ficon">□</span>README.txt</div>
+          <div class="file" data-open="experience"><span class="ficon">▤</span>experience.exe</div>
+          <div class="file" data-open="projects"><span class="ficon">▥</span>projects.exe</div>
+          <div class="file" data-open="skills"><span class="ficon">◆</span>skills.dll</div>
+          <div class="file" data-open="competencies"><span class="ficon">✦</span>competencies.sys</div>
+          <div class="file" data-open="contact"><span class="ficon">⌁</span>contact.url</div>
+          <div class="file" data-open="terminal"><span class="ficon">⌘</span>terminal.exe</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="window" id="win-about" data-title="README.txt — Notepad" style="left:240px;top:90px;width:520px;height:360px;">
+    <div class="titlebar">
+      <span>□ README.txt — Notepad</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="menubar"><span>File</span><span>Edit</span><span>Search</span><span>Help</span></div>
+    <div class="window-body" id="aboutContent"></div>
+  </section>
+
+  <section class="window" id="win-experience" data-title="experience.exe" style="left:310px;top:70px;width:560px;height:410px;">
+    <div class="titlebar">
+      <span>▤ experience.exe</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="menubar"><span>Timeline</span><span>Logs</span><span>System</span></div>
+    <div class="window-body" id="experienceContent"></div>
+  </section>
+
+  <section class="window" id="win-projects" data-title="projects.exe" style="left:180px;top:100px;width:650px;height:430px;">
+    <div class="titlebar">
+      <span>▥ projects.exe</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="menubar"><span>Projects</span><span>Preview</span><span>Links</span></div>
+    <div class="window-body" id="projectsContent"></div>
+  </section>
+
+  <section class="window" id="win-skills" data-title="skills.dll" style="left:380px;top:120px;width:470px;height:370px;">
+    <div class="titlebar">
+      <span>◆ skills.dll</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="menubar"><span>Modules</span><span>Status</span><span>Properties</span></div>
+    <div class="window-body" id="skillsContent"></div>
+  </section>
+
+  <section class="window" id="win-competencies" data-title="competencies.sys" style="left:300px;top:90px;width:590px;height:430px;">
+    <div class="titlebar">
+      <span>✦ competencies.sys</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="menubar"><span>Training</span><span>Projects</span><span>Background</span></div>
+    <div class="window-body" id="competenciesContent"></div>
+  </section>
+
+  <section class="window" id="win-contact" data-title="Internet — Contact Hub" style="left:270px;top:110px;width:520px;height:330px;">
+    <div class="titlebar">
+      <span>⌁ Internet — Contact Hub</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="menubar"><span>Go</span><span>Favorites</span><span>Mail</span></div>
+    <div class="window-body" id="contactContent"></div>
+  </section>
+
+  <section class="window" id="win-terminal" data-title="TatsuyaDesire/97 Terminal" style="left:200px;top:140px;width:600px;height:350px;">
+    <div class="titlebar">
+      <span>⌘ TatsuyaDesire/97 Terminal</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="window-body" style="padding:0;overflow:hidden;">
+      <div class="terminal" id="terminal">
+        <div id="terminalOutput"></div>
+        <div class="terminal-input-line"><span>C:\TATSUYA&gt;</span><input id="terminalInput" autocomplete="off" spellcheck="false" /></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="window" id="win-music" data-title="Music Player — Spotify" style="left:150px;top:70px;width:460px;height:500px;">
+    <div class="titlebar">
+      <span>♫ Music Player — Spotify</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="menubar"><span>Playlist</span><span>Playback</span><span>Dream Radio</span></div>
+    <div class="window-body">
+      <div class="music-shell">
+        <div class="retro-player">
+          <div class="retro-player-display">
+            <div>
+              DREAM RADIO / SPOTIFY LINK<br>
+              <span style="color:#91b9a4">SIGNAL: ONLINE // PLAYBACK: EMBED</span>
+            </div>
+            <div class="retro-player-led" aria-hidden="true"><i></i><i></i></div>
+          </div>
+
+          <div class="retro-player-controls">
+            <span class="retro-player-chip">STEREO</span>
+            <span class="retro-player-chip">TAPE HISS</span>
+            <span class="retro-player-chip">EXT. SIGNAL</span>
+            
+          </div>
+
+          <div class="spotify-bezel">
+            <iframe
+              id="spotifyPlayer"
+              class="spotify-frame"
+              title="Spotify playlist player"
+              src="https://open.spotify.com/embed/playlist/4q1WUAmxvHidA7KlOJ7Rh3?utm_source=generator&theme=0"
+              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy">
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="window" id="win-snake" data-title="Snake.exe" style="left:250px;top:65px;width:630px;height:520px;">
+    <div class="titlebar">
+      <span>≈ Snake.exe</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="menubar"><span>Game</span><span>Score</span><span>Help</span></div>
+    <div class="window-body">
+      <div class="snake-wrap">
+        <canvas id="snakeCanvas" width="420" height="420" aria-label="Jogo da cobrinha"></canvas>
+        <aside class="snake-panel">
+          <b>SCORE</b>
+          <div class="snake-score" id="snakeScore">0000</div>
+          <b>HIGH SCORE</b>
+          <div class="snake-score" id="snakeHighScore">0000</div>
+          <button class="retro-btn" id="snakeStartBtn">START / RESTART</button>
+          <button class="retro-btn" id="snakePauseBtn">PAUSE</button>
+          <p class="snake-help">
+            CONTROLS<br>
+            ↑ ↓ ← →<br>
+            ou WASD<br><br>
+            Space = pause
+          </p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <section class="window" id="win-trash" data-title="Lixeira" style="left:420px;top:170px;width:360px;height:260px;">
+    <div class="titlebar">
+      <span>⌫ Lixeira</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="window-body">
+      <div class="panel">
+        <p>1 item found.</p>
+        <div class="file" id="ghostFile"><span class="ficon">👾</span>definitely_not_a_ghost.exe</div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // ==========================
+    // EDITE SEUS DADOS AQUI
+    // ==========================
+    const portfolioData = {
+      name: "B. Tatsuya",
+      nickname: "Lou",
+      role: "Analista de Dados",
+      location: "Londrina / PR",
+      focus: "Análise de Dados · Automação · Machine Learning",
+      bio: "Discente de Ciência de Dados e Analista de Dados com atuação em automação de tarefas, otimização de processos e apoio à tomada de decisões. Trabalho principalmente com Python, SQL e VBA, criando controles automatizados, dashboards e ferramentas para tornar atividades operacionais mais eficientes. Minha trajetória na indústria fortaleceu uma visão prática de processos, melhoria contínua e resolução de problemas. Também possuo conhecimentos em métodos ágeis, Scrum, comunicação e organização de projetos.",
+      professionalInterest: "Gosto de resolver problemas em diferentes escalas: de automações simples em Excel e consultas SQL a processos mais complexos, análises preditivas e soluções orientadas por dados.",
+      status: "OPEN_TO_WORK // FREELANCE // PROJECTS // NETWORKING",
+      languages: [
+        { name: "Português", level: "Fluente" },
+        { name: "Inglês", level: "Intermediário" }
+      ],
+      experience: [
+        {
+          period: "2023 — NOW",
+          role: "Analista de Custos Pleno",
+          company: "Grupo Dallon",
+          description: "Atuação com análise de vendas e custos, desenvolvimento de automações para processos internos e construção de soluções voltadas à eficiência operacional e organização de informações.",
+          tech: ["SQL", "Python", "VBA", "Git"]
+        },
+        {
+          period: "TRAJETÓRIA INTERNA",
+          role: "Aprendiz → áreas operacionais e projetos → Analista",
+          company: "Grupo Dallon",
+          description: "Minha trajetória na empresa começou como aprendiz e evoluiu por diferentes frentes, incluindo contato com áreas operacionais e projetos, até chegar à posição de Analista. Esse percurso ampliou minha visão sobre processos, rotina industrial, melhoria contínua e resolução prática de problemas.",
+          tech: ["Processos", "Projetos", "Melhoria Contínua", "Análise"]
+        }
+      ],
+      education: [
+        {
+          period: "2025 — 2027",
+          course: "Tecnólogo em Ciência de Dados",
+          institution: "Anhanguera",
+          degree: "Graduação · Em andamento"
+        },
+        {
+          period: "2019 — 2022",
+          course: "Eletromecânica",
+          institution: "IFPR — Campus Jacarezinho",
+          degree: "Técnico"
+        }
+      ],
+      complementaryTraining: [
+        "Gestão de Projetos",
+        "Yellow Belt em Lean Six Sigma",
+        "Assistente Administrativo",
+        "Técnico em Auxiliar de Alimentador de Produção",
+        "Design Gráfico — Photoshop e Illustrator",
+        "Edição Audiovisual — Premiere"
+      ],
+      competencies: [
+        "Gestão de Projetos",
+        "Métodos Ágeis",
+        "Scrum",
+        "Comunicação",
+        "Organização de Projetos",
+        "Melhoria Contínua",
+        "Desenho Técnico",
+        "Modelagem 3D com SolidWorks",
+        "Automação de Processos",
+        "Análise de Dados",
+        "Pensamento Analítico",
+        "Adaptabilidade",
+        "Criatividade",
+        "Proatividade"
+      ],
+      culturalProjects: [
+        {
+          name: "Balaio Cultural",
+          role: "Organização cultural",
+          context: "IFPR"
+        },
+        {
+          name: "Feirinha da Ágora",
+          role: "Organização cultural",
+          context: "UENP"
+        },
+        {
+          name: "GeniusCon",
+          role: "Design Gráfico",
+          context: "2021 — 2023"
+        }
+      ],
+      otherExperience: [
+        "Fotografia freelancer",
+        "Edição de vídeo e produção audiovisual",
+        "Design gráfico",
+        "Bartender e coquetelaria"
+      ],
+      projects: [
+        {
+          name: "Employee Turnover Prediction",
+          type: "Projeto pessoal · Machine Learning",
+          description: "Pipeline completo de Machine Learning para prever rotatividade de funcionários utilizando o IBM HR Analytics. O projeto percorre todo o fluxo de Ciência de Dados, da análise exploratória à explicabilidade do modelo e geração de relatórios de risco.",
+          motivation: "Desenvolvido para aprofundar experiência prática e familiaridade com ferramentas de Ciência de Dados e Machine Learning.",
+          details: "Foram comparados modelos de Regressão Logística, Random Forest e XGBoost. O Balanced XGBoost foi selecionado por apresentar o melhor equilíbrio entre Precision e Recall. A explicabilidade foi implementada com SHAP para identificar os fatores de maior influência sobre o risco de turnover.",
+          results: "Balanced XGBoost · Accuracy 85,37% · Precision 57,14% · Recall 34,04% · F1 42,67% · ROC-AUC 75,14%",
+          tech: ["Python", "Jupyter Notebook", "Pandas", "NumPy", "Scikit-Learn", "XGBoost", "SHAP", "Machine Learning"],
+          live: "#",
+          github: "https://github.com/tatsuyadesire/employee-turnover-prediction"
+        },
+        {
+          name: "NLP com Python e NLTK",
+          type: "Projeto acadêmico · Processamento de Linguagem Natural",
+          description: "Projeto desenvolvido para estudos na unidade de Processamento de Linguagem Natural do curso de Ciência de Dados. Utiliza Python e a biblioteca NLTK para aplicar técnicas fundamentais de NLP diretamente no Visual Studio Code.",
+          motivation: "Explorar na prática os fundamentos de Processamento de Linguagem Natural e consolidar o uso da biblioteca NLTK em diferentes etapas de tratamento linguístico.",
+          details: "O projeto implementa segmentação em sentenças e palavras, remoção de stopwords, stemming, lematização e POS Tagging (marcação morfossintática), formando um pequeno laboratório prático de pré-processamento de linguagem natural.",
+          results: "PIPELINE: sentence tokenization → word tokenization → stopwords → stemming → lemmatization → POS tagging",
+          tech: ["Python", "NLTK", "NLP", "Visual Studio Code"],
+          live: "#",
+          github: "https://github.com/tatsuyadesire/nlp-python-nltk"
+        }
+      ],
+      skills: [
+        { name: "Python", category: "DATA_CORE", level: "PRIMARY" },
+        { name: "VBA", category: "AUTOMATION", level: "PRIMARY" },
+        { name: "SQL", category: "DATA_CORE", level: "PRIMARY" },
+        { name: "R", category: "DATA_CORE", level: "WORKING" },
+        { name: "Git", category: "TOOLS", level: "WORKING" },
+        { name: "VS Code", category: "TOOLS", level: "WORKING" },
+        { name: "Machine Learning", category: "DATA_SCIENCE", level: "WORKING" },
+        { name: "Análise de Dados", category: "DATA_SCIENCE", level: "PRIMARY" },
+        { name: "Photoshop", category: "CREATIVE", level: "WORKING" },
+        { name: "HTML", category: "WEB", level: "FAMILIAR" },
+        { name: "Illustrator", category: "CREATIVE", level: "FAMILIAR" }
+      ],
+      contacts: {
+        email: "",
+        linkedin: "https://www.linkedin.com/in/l-l-rojas-de-arruda-988828296/",
+        github: "https://github.com/tatsuyadesire"
+      },
+      personality: {
+        soundtrack: "Post-punk · cultura gótica · System of a Down",
+        creativeProject: "Agatha Sepulta",
+        creativeBackground: "Experiência em audiovisual e design desde 2018, com atuação em edição de vídeo, design gráfico, fotografia freelancer, produção de conteúdo e participação na organização de eventos e feiras culturais.",
+        curiosities: ["Café", "Arte experimental", "Post-punk", "Cultura gótica", "Produção audiovisual"]
+      },
+      spotify: {
+        embedUrl: "https://open.spotify.com/embed/playlist/4q1WUAmxvHidA7KlOJ7Rh3?utm_source=generator&theme=0"
+      }
+    };
+    const state = {
+      z: 10,
+      openWindows: new Set(),
+      active: null,
+      minimized: new Set(),
+      prevRects: new Map(),
+      clockClicks: 0
+    };
+
+    const $ = (s, root=document) => root.querySelector(s);
+    const $$ = (s, root=document) => [...root.querySelectorAll(s)];
+
+    function safeLink(url, label) {
+      if (!url || url === "#") return `<span class="tag">${label}: adicionar link</span>`;
+      return `<a href="${url}" target="_blank" rel="noopener">${label}</a>`;
+    }
+
+    function renderData() {
+      const spotifyPlayer = $("#spotifyPlayer");
+      if (spotifyPlayer && portfolioData.spotify?.embedUrl) {
+        spotifyPlayer.src = portfolioData.spotify.embedUrl;
+      }
+
+      $("#aboutContent").innerHTML = `
+        <div class="hero-bio">
+          <div class="avatar"><img src="tatsuya_profile.png" alt="Imagem de perfil de B. Tatsuya"></div>
+          <div>
+            <h2>${portfolioData.name} <span class="tag">Lou</span></h2>
+            <p><strong>${portfolioData.role}</strong></p>
+            <p>${portfolioData.location} // ${portfolioData.focus}</p>
+            <p>${portfolioData.bio}</p>
+            <p><b>WHAT_I_LIKE_TO_SOLVE.txt</b><br>${portfolioData.professionalInterest}</p>
+            <p><span class="tag">STATUS: ${portfolioData.status}</span></p>
+            <p>${portfolioData.languages.map(l => `<span class="tag">${l.name}: ${l.level}${l.note ? " · " + l.note : ""}</span>`).join("")}</p>
+          </div>
+        </div>
+      `;
+
+      $("#experienceContent").innerHTML = `
+        <h2>SYSTEM EXPERIENCE LOG</h2>
+        ${portfolioData.experience.map(item => `
+          <article class="timeline-item">
+            <strong>[${item.period}]</strong><br>
+            <b>${item.role}</b> @ ${item.company}
+            <p>${item.description}</p>
+            <p>${item.tech.map(t => `<span class="tag">${t}</span>`).join("")}</p>
+          </article>
+        `).join("")}
+        <h2 style="margin-top:18px">EDUCATION.LOG</h2>
+        ${portfolioData.education.map(item => `
+          <article class="timeline-item">
+            <strong>[${item.period}]</strong><br>
+            <b>${item.course}</b><br>
+            ${item.institution} · ${item.degree}
+          </article>
+        `).join("")}
+      `;
+
+      $("#projectsContent").innerHTML = `
+        <h2>INSTALLED PROJECTS</h2>
+        ${portfolioData.projects.map(p => `
+          <article class="project-card">
+            <h3>${p.name}</h3>
+            <span class="tag">${p.type}</span>
+            <p>${p.description}</p>
+            <p><b>WHY_BUILD_THIS.txt</b><br>${p.motivation}</p>
+            <p>${p.details}</p>
+            <p><b>MODEL_OUTPUT:</b> ${p.results}</p>
+            <p>${p.tech.map(t => `<span class="tag">${t}</span>`).join("")}</p>
+            <p>${safeLink(p.github, "GitHub Repository")}</p>
+          </article>
+        `).join("")}
+      `;
+
+      const grouped = Object.groupBy
+        ? Object.groupBy(portfolioData.skills, s => s.category)
+        : portfolioData.skills.reduce((acc, s) => ((acc[s.category] ||= []).push(s), acc), {});
+
+      $("#skillsContent").innerHTML = `
+        <h2>LOADED MODULES</h2>
+        ${Object.entries(grouped).map(([category, skills]) => `
+          <div class="panel" style="margin-bottom:9px">
+            <b>${category}.dll</b><br><br>
+            ${skills.map(s => `<span class="tag">${s.name}</span>`).join("")}
+          </div>
+        `).join("")}
+        <div class="panel">
+          <b>CREATIVE_ARCHIVE.dat</b>
+          <p>${portfolioData.personality.creativeBackground}</p>
+          <p>Projeto criativo:
+            <a href="https://open.spotify.com/intl-pt/artist/2fkMzB82VphBTaEHOazlkj"
+               target="_blank"
+               rel="noopener"
+               title="Abrir Agatha Sepulta no Spotify"><b>${portfolioData.personality.creativeProject}</b></a>
+          </p>
+          ${portfolioData.personality.curiosities.map(x => `<span class="tag">${x}</span>`).join("")}
+        </div>
+      `;
+
+      $("#competenciesContent").innerHTML = `
+        <h2>COMPETENCIES & TRAINING</h2>
+        <div class="panel" style="margin-bottom:10px">
+          <b>COMPLEMENTARY_TRAINING/</b><br><br>
+          ${portfolioData.complementaryTraining.map(x => `<span class="tag">${x}</span>`).join("")}
+        </div>
+        <div class="panel" style="margin-bottom:10px">
+          <b>CORE_COMPETENCIES.sys</b><br><br>
+          ${portfolioData.competencies.map(x => `<span class="tag">${x}</span>`).join("")}
+        </div>
+        <div class="panel" style="margin-bottom:10px">
+          <b>CULTURAL_PROJECTS.log</b><br><br>
+          ${portfolioData.culturalProjects.map(p => `<p><b>${p.name}</b> // ${p.role} // ${p.context}</p>`).join("")}
+        </div>
+        <div class="panel">
+          <b>OTHER_EXPERIENCE.dat</b><br><br>
+          ${portfolioData.otherExperience.map(x => `<span class="tag">${x}</span>`).join("")}
+        </div>
+      `;
+
+      $("#contactContent").innerHTML = `
+        <h2>CONTACT HUB</h2>
+        <div class="panel">
+          ${portfolioData.contacts.email ? `<p>MAIL // <a href="mailto:${portfolioData.contacts.email}">${portfolioData.contacts.email}</a></p>` : ""}
+          <p>GITHUB // <a href="${portfolioData.contacts.github}" target="_blank" rel="noopener">tatsuyadesire</a></p>
+          <p>LINKEDIN // <a href="${portfolioData.contacts.linkedin}" target="_blank" rel="noopener">connect.exe</a></p>
+          <p style="color:var(--muted)">CURRENT_STATUS // aberta a oportunidades, projetos, freelance e networking.</p>
+        </div>
+      `;
+    }
+    function makeStars() {
+      const root = $("#stars");
+      for (let i = 0; i < 55; i++) {
+        const s = document.createElement("i");
+        s.className = "star";
+        s.style.left = Math.random() * 100 + "%";
+        s.style.top = Math.random() * 100 + "%";
+        s.style.animationDelay = (Math.random() * 2.6) + "s";
+        root.appendChild(s);
+      }
+    }
+
+    // ==========================
+    // DREAMGAZE UI SOUND ENGINE
+    // Web Audio: no external audio files required.
+    // ==========================
+    const soundState = {
+      ctx: null,
+      muted: localStorage.getItem("tatsuyadesire97_sfx_muted") === "1"
+    };
+
+    function getAudioContext() {
+      if (!soundState.ctx) {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return null;
+        soundState.ctx = new AudioCtx();
+      }
+      if (soundState.ctx.state === "suspended") soundState.ctx.resume();
+      return soundState.ctx;
+    }
+
+    function tone(freq=440, duration=.06, volume=.025, type="sine", endFreq=null, delay=0) {
+      if (soundState.muted) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const now = ctx.currentTime + delay;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+      if (endFreq) osc.frequency.exponentialRampToValueAtTime(Math.max(1,endFreq), now + duration);
+      gain.gain.setValueAtTime(.0001, now);
+      gain.gain.exponentialRampToValueAtTime(volume, now + .008);
+      gain.gain.exponentialRampToValueAtTime(.0001, now + duration);
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.start(now); osc.stop(now + duration + .02);
+    }
+
+    function noise(duration=.04, volume=.012) {
+      if (soundState.muted) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const len = Math.max(1, Math.floor(ctx.sampleRate * duration));
+      const buffer = ctx.createBuffer(1, len, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i=0; i<len; i++) data[i] = (Math.random()*2-1) * (1-i/len);
+      const src = ctx.createBufferSource();
+      const filter = ctx.createBiquadFilter();
+      const gain = ctx.createGain();
+      filter.type = "bandpass"; filter.frequency.value = 1800; filter.Q.value = .8;
+      gain.gain.value = volume;
+      src.buffer = buffer; src.connect(filter); filter.connect(gain); gain.connect(ctx.destination); src.start();
+    }
+
+    function playSfx(name) {
+      if (soundState.muted) return;
+      switch (name) {
+        case "click":
+          tone(920,.025,.012,"square",720);
+          break;
+        case "open":
+          tone(330,.055,.018,"sine",520);
+          tone(660,.085,.012,"sine",820,.035);
+          break;
+        case "close":
+          tone(520,.06,.017,"sine",260);
+          noise(.035,.006);
+          break;
+        case "minimize":
+          tone(430,.06,.014,"triangle",250);
+          break;
+        case "maximize":
+          tone(360,.045,.014,"triangle",590);
+          break;
+        case "start":
+          tone(260,.045,.014,"square",330);
+          tone(520,.055,.010,"sine",650,.035);
+          break;
+        case "terminal":
+          tone(740,.025,.010,"square",620);
+          noise(.025,.004);
+          break;
+        case "ghost":
+          tone(185,.55,.018,"sine",92);
+          tone(277,.7,.010,"triangle",138,.06);
+          break;
+      }
+    }
+
+
+    const ambientState = {
+      started: false,
+      master: null,
+      noise: null,
+      nodes: []
+    };
+
+    function startAmbientSound() {
+      if (ambientState.started || soundState.muted) return;
+      const ctx = getAudioContext();
+      if (!ctx) return;
+
+      ambientState.started = true;
+      const master = ctx.createGain();
+      master.gain.setValueAtTime(.0001, ctx.currentTime);
+      master.gain.exponentialRampToValueAtTime(.060, ctx.currentTime + 1.8);
+      master.connect(ctx.destination);
+      ambientState.master = master;
+
+      [
+        [55, "sine", .22],
+        [110, "sine", .070],
+        [220, "triangle", .022],
+        [329.63, "sine", .010],
+        [440, "sine", .007]
+      ].forEach(([freq, type, gainValue]) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.value = freq;
+        gain.gain.value = gainValue;
+        osc.connect(gain);
+        gain.connect(master);
+        osc.start();
+        ambientState.nodes.push(osc);
+      });
+
+      const seconds = 2;
+      const buffer = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      let smooth = 0;
+      for (let i = 0; i < data.length; i++) {
+        smooth = smooth * .986 + (Math.random() * 2 - 1) * .014;
+        data[i] = smooth;
+      }
+
+      const src = ctx.createBufferSource();
+      const filter = ctx.createBiquadFilter();
+      const noiseGain = ctx.createGain();
+      src.buffer = buffer;
+      src.loop = true;
+      filter.type = "bandpass";
+      filter.frequency.value = 840;
+      filter.Q.value = .28;
+      noiseGain.gain.value = .17;
+      src.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(master);
+      src.start();
+      ambientState.noise = src;
+
+      const lfo = ctx.createOscillator();
+      const lfoGain = ctx.createGain();
+      lfo.frequency.value = .065;
+      lfoGain.gain.value = .008;
+      lfo.connect(lfoGain);
+      lfoGain.connect(master.gain);
+      lfo.start();
+      ambientState.nodes.push(lfo);
+
+      // A barely audible detuned "dream machine" drift.
+      const drift = ctx.createOscillator();
+      const driftGain = ctx.createGain();
+      drift.type = "sine";
+      drift.frequency.value = 164.5;
+      drift.detune.value = -7;
+      driftGain.gain.value = .010;
+      drift.connect(driftGain);
+      driftGain.connect(master);
+      drift.start();
+      ambientState.nodes.push(drift);
+    }
+
+    function syncAmbientMute() {
+      if (!ambientState.master || !soundState.ctx) return;
+      const now = soundState.ctx.currentTime;
+      ambientState.master.gain.cancelScheduledValues(now);
+      ambientState.master.gain.setTargetAtTime(soundState.muted ? .0001 : .060, now, .10);
+    }
+
+    function setupSoundFX() {
+      const toggle = $("#soundToggle");
+      const render = () => {
+        toggle.textContent = soundState.muted ? "× AUDIO" : "♪ AUDIO";
+        toggle.classList.toggle("muted", soundState.muted);
+        toggle.title = soundState.muted ? "Ativar áudio" : "Silenciar SFX + ambiente";
+      };
+
+      render();
+
+      const unlockAmbient = () => {
+        if (!soundState.muted) startAmbientSound();
+      };
+      document.addEventListener("pointerdown", unlockAmbient, { once: true });
+      document.addEventListener("keydown", unlockAmbient, { once: true });
+
+      toggle.addEventListener("click", e => {
+        e.stopPropagation();
+        soundState.muted = !soundState.muted;
+        localStorage.setItem("tatsuyadesire97_sfx_muted", soundState.muted ? "1" : "0");
+        render();
+
+        if (!soundState.muted) {
+          if (!ambientState.started) startAmbientSound();
+          syncAmbientMute();
+          playSfx("open");
+        } else {
+          syncAmbientMute();
+        }
+      });
+
+      document.addEventListener("pointerdown", e => {
+        if (e.target.closest("button, .file, .desktop-icon, .start-item, .occult-mark")) {
+          if (!e.target.closest("#soundToggle")) playSfx("click");
+        }
+      });
+    }
+
+    function windowId(name) { return `win-${name}`; }
+
+    function focusWindow(win) {
+      if (!win) return;
+      state.z += 1;
+      win.style.zIndex = state.z;
+      $$(".window").forEach(w => w.classList.add("inactive"));
+      win.classList.remove("inactive");
+      state.active = win.id;
+      updateTaskbar();
+    }
+
+    function openWindow(name) {
+      const win = document.getElementById(windowId(name));
+      if (!win) return;
+      const wasOpen = win.classList.contains("open") && !state.minimized.has(win.id);
+      win.classList.add("open");
+      if (!wasOpen) playSfx("open");
+      state.openWindows.add(win.id);
+      state.minimized.delete(win.id);
+      focusWindow(win);
+      updateTaskbar();
+      if (name === "terminal") setTimeout(() => $("#terminalInput").focus(), 40);
+      $("#startMenu").classList.remove("open");
+      $("#startBtn").classList.remove("pressed");
+    }
+
+    function closeWindow(win) {
+      playSfx("close");
+      win.classList.remove("open");
+      state.openWindows.delete(win.id);
+      state.minimized.delete(win.id);
+      updateTaskbar();
+    }
+
+    function minimizeWindow(win) {
+      playSfx("minimize");
+      win.classList.remove("open");
+      state.minimized.add(win.id);
+      updateTaskbar();
+    }
+
+    function toggleMaximize(win) {
+      playSfx("maximize");
+      if (!win.classList.contains("maximized")) {
+        state.prevRects.set(win.id, {
+          left: win.style.left, top: win.style.top, width: win.style.width, height: win.style.height
+        });
+        win.classList.add("maximized");
+      } else {
+        win.classList.remove("maximized");
+        const r = state.prevRects.get(win.id);
+        if (r) Object.assign(win.style, r);
+      }
+      focusWindow(win);
+    }
+
+    function updateTaskbar() {
+      const taskList = $("#taskList");
+      taskList.innerHTML = "";
+      state.openWindows.forEach(id => {
+        const win = document.getElementById(id);
+        const btn = document.createElement("button");
+        btn.className = "retro-btn task-btn";
+        if (state.active === id && !state.minimized.has(id)) btn.classList.add("pressed");
+        btn.textContent = win.dataset.title || id;
+        btn.addEventListener("click", () => {
+          if (state.minimized.has(id)) {
+            win.classList.add("open");
+            state.minimized.delete(id);
+            focusWindow(win);
+          } else if (state.active === id && win.classList.contains("open")) {
+            minimizeWindow(win);
+          } else {
+            win.classList.add("open");
+            focusWindow(win);
+          }
+        });
+        taskList.appendChild(btn);
+      });
+    }
+
+    function setupWindowControls() {
+      $$(".window").forEach(win => {
+        $(".close-btn", win).addEventListener("click", () => closeWindow(win));
+        $(".min-btn", win).addEventListener("click", () => minimizeWindow(win));
+        $(".max-btn", win).addEventListener("click", () => toggleMaximize(win));
+        win.addEventListener("mousedown", () => focusWindow(win));
+
+        const titlebar = $(".titlebar", win);
+        let dragging = false, ox = 0, oy = 0;
+
+        titlebar.addEventListener("mousedown", (e) => {
+          if (e.target.closest("button") || win.classList.contains("maximized") || innerWidth <= 720) return;
+          dragging = true;
+          const rect = win.getBoundingClientRect();
+          ox = e.clientX - rect.left;
+          oy = e.clientY - rect.top;
+          focusWindow(win);
+        });
+
+        document.addEventListener("mousemove", (e) => {
+          if (!dragging) return;
+          const maxX = innerWidth - win.offsetWidth;
+          const maxY = innerHeight - parseInt(getComputedStyle(document.documentElement).getPropertyValue("--taskbar-h")) - 30;
+          win.style.left = Math.max(0, Math.min(e.clientX - ox, maxX)) + "px";
+          win.style.top = Math.max(0, Math.min(e.clientY - oy, maxY)) + "px";
+        });
+
+        document.addEventListener("mouseup", () => dragging = false);
+      });
+    }
+
+    function setupOpeners() {
+      $$("[data-open]").forEach(el => {
+        let lastTap = 0;
+        el.addEventListener("click", () => {
+          $$(".desktop-icon").forEach(x => x.classList.remove("selected"));
+          if (el.classList.contains("desktop-icon")) el.classList.add("selected");
+          if (!el.classList.contains("desktop-icon")) openWindow(el.dataset.open);
+        });
+        el.addEventListener("dblclick", () => openWindow(el.dataset.open));
+        el.addEventListener("keydown", e => {
+          if (e.key === "Enter") openWindow(el.dataset.open);
+        });
+        el.addEventListener("touchend", () => {
+          const now = Date.now();
+          if (now - lastTap < 350) openWindow(el.dataset.open);
+          lastTap = now;
+        });
+      });
+
+      $$(".file").forEach(el => {
+        if (el.dataset.open) el.addEventListener("dblclick", () => openWindow(el.dataset.open));
+      });
+    }
+
+    function toast(message, ms=2600) {
+      const t = $("#toast");
+      t.textContent = message;
+      t.classList.add("show");
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove("show"), ms);
+    }
+
+
+    function runShutdownSequence() {
+      const screen = $("#shutdownScreen");
+      const title = $("#shutdownTitle");
+      const text = $("#shutdownText");
+      const status = $("#shutdownStatus");
+
+      screen.classList.add("show");
+      title.textContent = "SAVING DREAM STATE...";
+      text.textContent = "Closing open memories.";
+      status.textContent = "SYSTEM // preparing shutdown";
+
+      clearTimeout(runShutdownSequence.t1);
+      clearTimeout(runShutdownSequence.t2);
+      clearTimeout(runShutdownSequence.t3);
+
+      runShutdownSequence.t1 = setTimeout(() => {
+        title.textContent = "CLOSING OPEN MEMORIES...";
+        text.textContent = "Writing last known state to disk.";
+        status.textContent = "MEMORY // OK";
+      }, 650);
+
+      runShutdownSequence.t2 = setTimeout(() => {
+        title.textContent = "SIGNAL LOST.";
+        text.textContent = "TatsuyaDesire/97 has entered dream state.";
+        status.textContent = "DREAM STATE // ACTIVE";
+      }, 1350);
+
+      runShutdownSequence.t3 = setTimeout(() => {
+        title.textContent = "It is now safe to leave this website.";
+        text.textContent = "TatsuyaDesire/97 has entered dream state.";
+        status.textContent = "";
+      }, 2200);
+    }
+
+    function restartFromShutdown() {
+      clearTimeout(runShutdownSequence.t1);
+      clearTimeout(runShutdownSequence.t2);
+      clearTimeout(runShutdownSequence.t3);
+      $("#shutdownScreen").classList.remove("show");
+      $("#shutdownTitle").textContent = "It is now safe to leave this website.";
+      $("#shutdownText").textContent = "TatsuyaDesire/97 has entered dream state.";
+      $("#shutdownStatus").textContent = "";
+      playSfx("open");
+    }
+
+    function setupStart() {
+      const btn = $("#startBtn");
+      const menu = $("#startMenu");
+      btn.addEventListener("click", e => {
+        e.stopPropagation();
+        menu.classList.toggle("open");
+        playSfx("start");
+        btn.classList.toggle("pressed", menu.classList.contains("open"));
+      });
+      document.addEventListener("click", e => {
+        if (!menu.contains(e.target) && e.target !== btn) {
+          menu.classList.remove("open");
+          btn.classList.remove("pressed");
+        }
+      });
+      $("#shutdownItem").addEventListener("click", runShutdownSequence);
+      $("#restartBtn").addEventListener("click", restartFromShutdown);
+    }
+
+    function setupClock() {
+      const clock = $("#clock");
+      const update = () => {
+        const d = new Date();
+        clock.textContent = d.toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+      };
+      update();
+      setInterval(update, 1000);
+      clock.addEventListener("click", () => {
+        state.clockClicks++;
+        if (state.clockClicks >= 7) {
+          toast("00:00 // the dream noticed you.");
+          state.clockClicks = 0;
+        }
+      });
+    }
+
+    function appendTerminal(text="") {
+      const out = $("#terminalOutput");
+      const div = document.createElement("div");
+      div.className = "terminal-line";
+      div.textContent = text;
+      out.appendChild(div);
+      $("#terminal").scrollTop = $("#terminal").scrollHeight;
+    }
+
+    function runCommand(input) {
+      const cmd = input.trim().toLowerCase();
+      appendTerminal(`C:\\TATSUYA> ${input}`);
+      const commands = {
+        help: "help · about · experience · skills · projects · contact · clear · whoami · date · theme · ghost",
+        about: `${portfolioData.name} — ${portfolioData.role}\\n${portfolioData.bio}`,
+        experience: portfolioData.experience.map(x => `${x.period} | ${x.role} @ ${x.company}`).join("\\n"),
+        skills: portfolioData.skills.map(x => `${x.name}: ${x.level}%`).join("\\n"),
+        projects: portfolioData.projects.map(x => x.name).join("\\n"),
+        contact: `${portfolioData.contacts.email}\\n${portfolioData.contacts.linkedin}\\n${portfolioData.contacts.github}`,
+        whoami: portfolioData.name,
+        date: new Date().toString(),
+        ghost: "GHOST PROCESS STARTED..."
+      };
+      if (cmd === "clear") {
+        $("#terminalOutput").innerHTML = "";
+        return;
+      }
+      if (cmd === "ghost") {
+        const enabled = document.body.classList.toggle("ghost-mode");
+        if (enabled) playSfx("ghost");
+        appendTerminal(enabled ? "GHOST PROCESS STARTED..." : "GHOST PROCESS TERMINATED.");
+        toast(enabled ? "WARNING // spectral interference detected" : "ghost.exe detached // signal stable");
+        return;
+      }
+
+      if (cmd === "theme") {
+        appendTerminal("Available themes:");
+        appendTerminal("  dreamgaze  // DREAMGAZE_PDX (default)");
+        appendTerminal("  spectral   // SPECTRAL_PURPLE_97");
+        appendTerminal("  moonmilk   // pale blue / silver haze");
+        appendTerminal("  rosefog    // dusty pink / nocturnal bloom");
+        appendTerminal("  liminalsea // drowned teal / analog dream");
+        appendTerminal('Use: theme <name>  // ex: theme spectral');
+        return;
+      }
+
+      if (cmd.startsWith("theme ")) {
+        const themeName = cmd.split(/\s+/)[1];
+        if (applyTheme(themeName)) {
+          appendTerminal(`Theme loaded: ${themeName.toUpperCase()}`);
+          toast(`theme://${themeName} // dream palette mounted`);
+        } else {
+          appendTerminal(`Unknown theme: ${themeName}`);
+          appendTerminal("Type 'theme' to list available themes.");
+        }
+        return;
+      }
+
+      appendTerminal(commands[cmd] ?? `Bad command or file name: ${cmd || "(empty)"}`);
+    }
+
+    const themeClasses = ["theme-spectral", "theme-moonmilk", "theme-rosefog", "theme-liminalsea"];
+
+    function applyTheme(name, persist=true) {
+      const themes = {
+        dreamgaze: null,
+        spectral: "theme-spectral",
+        moonmilk: "theme-moonmilk",
+        rosefog: "theme-rosefog",
+        liminalsea: "theme-liminalsea"
+      };
+      if (!(name in themes)) return false;
+      document.body.classList.remove(...themeClasses);
+      if (themes[name]) document.body.classList.add(themes[name]);
+      if (persist) localStorage.setItem("tatsuyadesire97_theme", name);
+      return true;
+    }
+
+    function restoreTheme() {
+      const saved = localStorage.getItem("tatsuyadesire97_theme") || "dreamgaze";
+      applyTheme(saved, false);
+    }
+
+    function setupTerminal() {
+      const input = $("#terminalInput");
+      appendTerminal("TatsuyaDesire/97 Terminal v0.97");
+      appendTerminal('Type "help" for available commands.');
+      input.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+          const value = input.value;
+          input.value = "";
+          playSfx("terminal");
+          runCommand(value);
+        }
+      });
+    }
+
+    function setupGothicEasterEggs() {
+      const mark = $("#occultMark");
+      let clicks = 0;
+      mark.addEventListener("click", () => {
+        clicks++;
+        if (clicks === 3) toast("archive://agatha_sepulta // signal detected");
+        if (clicks >= 7) {
+          document.body.classList.toggle("ghost-mode");
+          toast("the moon remembers what the daylight forgets.");
+          clicks = 0;
+        }
+      });
+
+      document.addEventListener("keydown", e => {
+        if (e.key.toLowerCase() === "g" && e.altKey) {
+          toast("GOTHIC MODE // no church bells found, only reverb.");
+          document.body.classList.toggle("ghost-mode");
+        }
+      });
+    }
+
+    function setupGhostFile() {
+      $("#ghostFile").addEventListener("dblclick", () => {
+        document.body.classList.add("ghost-mode");
+        playSfx("ghost");
+        toast("WARNING // definitely_not_a_ghost.exe // visual anomaly detected", 5200);
+        setTimeout(() => {
+          document.body.classList.remove("ghost-mode");
+          toast("ghost.exe vanished // signal returned to normal");
+        }, 5200);
+      });
+    }
+
+
+    function cssColor(name, fallback) {
+      const value = getComputedStyle(document.body).getPropertyValue(name).trim();
+      return value || fallback;
+    }
+
+    function hexToRgba(color, alpha) {
+      if (!color) return `rgba(255,255,255,${alpha})`;
+      if (color.startsWith("rgb")) {
+        const nums = color.match(/[\d.]+/g);
+        if (!nums || nums.length < 3) return `rgba(255,255,255,${alpha})`;
+        return `rgba(${nums[0]},${nums[1]},${nums[2]},${alpha})`;
+      }
+      let hex = color.replace("#", "").trim();
+      if (hex.length === 3) hex = hex.split("").map(x => x + x).join("");
+      if (hex.length !== 6) return `rgba(255,255,255,${alpha})`;
+      const r = parseInt(hex.slice(0,2),16);
+      const g = parseInt(hex.slice(2,4),16);
+      const b = parseInt(hex.slice(4,6),16);
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+
+    function setupSnake() {
+      const canvas = $("#snakeCanvas");
+      const ctx = canvas.getContext("2d");
+      const scoreEl = $("#snakeScore");
+      const highEl = $("#snakeHighScore");
+      const startBtn = $("#snakeStartBtn");
+      const pauseBtn = $("#snakePauseBtn");
+
+      const grid = 21;
+      const cell = canvas.width / grid;
+      let snake = [];
+      let food = {x: 14, y: 10};
+      let dir = {x: 1, y: 0};
+      let nextDir = {x: 1, y: 0};
+      let score = 0;
+      let high = Number(localStorage.getItem("tatsuyadesire97_snake_high") || 0);
+      let timer = null;
+      let paused = false;
+      let running = false;
+      let dreamTrail = [];
+
+      highEl.textContent = String(high).padStart(4, "0");
+
+      function reset() {
+        snake = [{x: 8, y: 10}, {x: 7, y: 10}, {x: 6, y: 10}];
+        dir = {x: 1, y: 0};
+        nextDir = {x: 1, y: 0};
+        score = 0;
+        paused = false;
+        running = true;
+        dreamTrail = [];
+        scoreEl.textContent = "0000";
+        placeFood();
+        draw();
+        if (timer) clearInterval(timer);
+        timer = setInterval(tick, 115);
+        pauseBtn.textContent = "PAUSE";
+      }
+
+      function placeFood() {
+        do {
+          food = {
+            x: Math.floor(Math.random() * grid),
+            y: Math.floor(Math.random() * grid)
+          };
+        } while (snake.some(s => s.x === food.x && s.y === food.y));
+      }
+
+      function tick() {
+        if (!running || paused) return;
+        dir = nextDir;
+        const head = {
+          x: snake[0].x + dir.x,
+          y: snake[0].y + dir.y
+        };
+
+        if (
+          head.x < 0 || head.y < 0 ||
+          head.x >= grid || head.y >= grid ||
+          snake.some(s => s.x === head.x && s.y === head.y)
+        ) {
+          gameOver();
+          return;
+        }
+
+        snake.unshift(head);
+
+        dreamTrail.unshift({ x: head.x, y: head.y, life: 1 });
+        dreamTrail = dreamTrail
+          .map(t => ({ ...t, life: t.life - .08 }))
+          .filter(t => t.life > 0)
+          .slice(0, 14);
+
+        if (head.x === food.x && head.y === food.y) {
+          score += 10;
+          scoreEl.textContent = String(score).padStart(4, "0");
+          if (score > high) {
+            high = score;
+            localStorage.setItem("tatsuyadesire97_snake_high", String(high));
+            highEl.textContent = String(high).padStart(4, "0");
+          }
+          placeFood();
+        } else {
+          snake.pop();
+        }
+        draw();
+      }
+
+      function gameOver() {
+        running = false;
+        clearInterval(timer);
+        draw();
+        ctx.fillStyle = "rgba(9,7,13,.78)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = cssColor("--lilac", "#d7c7ff");
+        ctx.font = "bold 24px Courier New";
+        ctx.textAlign = "center";
+        ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 8);
+        ctx.font = "14px Courier New";
+        ctx.fillText("press START / RESTART", canvas.width / 2, canvas.height / 2 + 22);
+      }
+
+      function draw() {
+        const bg = cssColor("--bg", "#09070d");
+        const ink = cssColor("--ink", "#f5f1ff");
+        const magenta = cssColor("--magenta", "#e79bdc");
+        const cyan = cssColor("--cyan", "#a8f0ed");
+        const lilac = cssColor("--lilac", "#d7c7ff");
+        const violet = cssColor("--violet", "#8d82ff");
+
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Soft fog: broad translucent blooms, fixed enough not to distract.
+        const fog1 = ctx.createRadialGradient(
+          canvas.width * .27, canvas.height * .24, 10,
+          canvas.width * .27, canvas.height * .24, canvas.width * .42
+        );
+        fog1.addColorStop(0, hexToRgba(magenta, .085));
+        fog1.addColorStop(1, hexToRgba(magenta, 0));
+        ctx.fillStyle = fog1;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        const fog2 = ctx.createRadialGradient(
+          canvas.width * .76, canvas.height * .72, 8,
+          canvas.width * .76, canvas.height * .72, canvas.width * .38
+        );
+        fog2.addColorStop(0, hexToRgba(cyan, .055));
+        fog2.addColorStop(1, hexToRgba(cyan, 0));
+        ctx.fillStyle = fog2;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Theme-aware grid.
+        ctx.strokeStyle = hexToRgba(lilac, .065);
+        ctx.lineWidth = 1;
+        for (let i = 0; i <= grid; i++) {
+          ctx.beginPath();
+          ctx.moveTo(i * cell, 0);
+          ctx.lineTo(i * cell, canvas.height);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(0, i * cell);
+          ctx.lineTo(canvas.width, i * cell);
+          ctx.stroke();
+        }
+
+        // Dream trail behind the snake.
+        dreamTrail.slice().reverse().forEach((t, i) => {
+          const alpha = Math.max(0, t.life) * .12;
+          ctx.fillStyle = hexToRgba(i % 2 ? cyan : magenta, alpha);
+          ctx.beginPath();
+          ctx.arc(
+            t.x * cell + cell / 2,
+            t.y * cell + cell / 2,
+            Math.max(2, cell * (.18 + t.life * .16)),
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+        });
+
+        // Food with a soft glow.
+        ctx.save();
+        ctx.shadowBlur = 12;
+        ctx.shadowColor = hexToRgba(magenta, .55);
+        ctx.fillStyle = magenta;
+        ctx.fillRect(food.x * cell + 4, food.y * cell + 4, cell - 8, cell - 8);
+        ctx.restore();
+
+        snake.forEach((s, i) => {
+          ctx.save();
+          ctx.fillStyle = i === 0 ? lilac : violet;
+          ctx.shadowBlur = i === 0 ? 10 : 5;
+          ctx.shadowColor = hexToRgba(i === 0 ? cyan : magenta, i === 0 ? .36 : .18);
+          ctx.fillRect(s.x * cell + 2, s.y * cell + 2, cell - 4, cell - 4);
+          ctx.restore();
+
+          if (i === 0) {
+            ctx.fillStyle = bg;
+            const eyeY = s.y * cell + 7;
+            ctx.fillRect(s.x * cell + 6, eyeY, 3, 3);
+            ctx.fillRect(s.x * cell + cell - 9, eyeY, 3, 3);
+          }
+        });
+
+        if (!running) {
+          ctx.fillStyle = cssColor("--lilac", "#d7c7ff");
+          ctx.font = "bold 18px Courier New";
+          ctx.textAlign = "center";
+          ctx.fillText("SNAKE.EXE", canvas.width / 2, canvas.height / 2);
+        }
+
+        if (paused && running) {
+          ctx.fillStyle = "rgba(9,7,13,.72)";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = cssColor("--cyan", "#a8f0ed");
+          ctx.font = "bold 22px Courier New";
+          ctx.textAlign = "center";
+          ctx.fillText("PAUSED", canvas.width / 2, canvas.height / 2);
+        }
+      }
+
+      function setDirection(x, y) {
+        if (x === -dir.x && y === -dir.y) return;
+        nextDir = {x, y};
+      }
+
+      document.addEventListener("keydown", e => {
+        const snakeWin = $("#win-snake");
+        if (!snakeWin.classList.contains("open")) return;
+
+        const key = e.key.toLowerCase();
+        const controls = {
+          arrowup: [0,-1], w: [0,-1],
+          arrowdown: [0,1], s: [0,1],
+          arrowleft: [-1,0], a: [-1,0],
+          arrowright: [1,0], d: [1,0]
+        };
+
+        if (controls[key]) {
+          e.preventDefault();
+          setDirection(...controls[key]);
+        } else if (e.code === "Space") {
+          e.preventDefault();
+          togglePause();
+        }
+      });
+
+      function togglePause() {
+        if (!running) return;
+        paused = !paused;
+        pauseBtn.textContent = paused ? "RESUME" : "PAUSE";
+        draw();
+      }
+
+      startBtn.addEventListener("click", reset);
+      pauseBtn.addEventListener("click", togglePause);
+      draw();
+    }
+
+
+    function setupSpotifyResponsiveScale() {
+      const bezel = document.querySelector("#win-music .spotify-bezel");
+      const frame = document.getElementById("spotifyPlayer");
+      if (!bezel || !frame) return;
+
+      const BASE_W = 460;
+      const BASE_H = 352;
+
+      const resizeSpotify = () => {
+        const rect = bezel.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+
+        // "contain" keeps the full player visible while making it as large
+        // as the current window allows.
+        const scale = Math.min(rect.width / BASE_W, rect.height / BASE_H);
+
+        frame.style.transform =
+          `translate(-50%, -50%) scale(${Math.max(.35, scale)})`;
+      };
+
+      const observer = new ResizeObserver(resizeSpotify);
+      observer.observe(bezel);
+
+      window.addEventListener("resize", resizeSpotify);
+      setTimeout(resizeSpotify, 0);
+    }
+
+    restoreTheme();
+
+
+    function setupPsychedelicDesktop() {
+      const desktop = $("#desktop");
+      if (!desktop) return;
+
+      desktop.addEventListener("click", e => {
+        // Never react to UI controls or icons; only the wallpaper itself.
+        if (e.target.closest(".desktop-icon, .occult-mark")) return;
+
+        const rect = desktop.getBoundingClientRect();
+        const ripple = document.createElement("i");
+        ripple.className = "psy-ripple";
+        ripple.style.left = (e.clientX - rect.left) + "px";
+        ripple.style.top = (e.clientY - rect.top) + "px";
+        ripple.style.setProperty("--psy-seed", String(Math.random()));
+        desktop.appendChild(ripple);
+
+        ripple.addEventListener("animationend", () => ripple.remove(), { once: true });
+      });
+    }
+
+
+
+    function setupDreamCursor() {
+      // Native cursor is intentionally used in the stable build.
+      return;
+    }
+
+    renderData();
+    setupSoundFX();
+    makeStars();
+    setupWindowControls();
+    setupOpeners();
+    setupStart();
+    setupClock();
+    setupTerminal();
+    setupGothicEasterEggs();
+    setupGhostFile();
+    setupSnake();
+    setupDreamCursor();
+    setupPsychedelicDesktop();
+    setupSpotifyResponsiveScale();
+
+    // Abre uma janela inicial discreta.
+    setTimeout(() => openWindow("about"), 450);
+  </script>
+</body>
+</html>
