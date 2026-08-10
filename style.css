@@ -883,7 +883,7 @@
     }
 
     html, body, button, a, input, .file, .desktop-icon, .start-item, .occult-mark {
-      cursor: none !important;
+      cursor: auto !important;
     }
 
     /* Elementos do cursor personalizado e de seu rastro visual. */
