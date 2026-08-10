@@ -1,6 +1,4 @@
-// ==========================
-    // EDITE SEUS DADOS AQUI
-    // ==========================
+    // Dados centrais do portfólio usados para preencher dinamicamente as janelas da interface.
     const portfolioData = {
       name: "B. Tatsuya",
       nickname: "Lou",
@@ -143,6 +141,7 @@
         embedUrl: "https://open.spotify.com/embed/playlist/4q1WUAmxvHidA7KlOJ7Rh3?utm_source=generator&theme=0"
       }
     };
+    // Estado global da interface: controla foco, janelas abertas, minimizadas e ordem de sobreposição.
     const state = {
       z: 10,
       openWindows: new Set(),
@@ -152,14 +151,17 @@
       clockClicks: 0
     };
 
+    // Atalhos para selecionar um ou vários elementos do DOM.
     const $ = (s, root=document) => root.querySelector(s);
     const $$ = (s, root=document) => [...root.querySelectorAll(s)];
 
+    // Gera um link externo seguro ou informa quando o endereço ainda não foi cadastrado.
     function safeLink(url, label) {
       if (!url || url === "#") return `<span class="tag">${label}: adicionar link</span>`;
       return `<a href="${url}" target="_blank" rel="noopener">${label}</a>`;
     }
 
+    // Renderiza os dados do portfólio nas respectivas janelas da interface.
     function renderData() {
       const spotifyPlayer = $("#spotifyPlayer");
       if (spotifyPlayer && portfolioData.spotify?.embedUrl) {
@@ -272,6 +274,7 @@
         </div>
       `;
     }
+    // Cria estrelas em posições aleatórias para compor o fundo visual do desktop.
     function makeStars() {
       const root = $("#stars");
       for (let i = 0; i < 55; i++) {
@@ -284,15 +287,15 @@
       }
     }
 
-    // ==========================
-    // DREAMGAZE UI SOUND ENGINE
-    // Web Audio: no external audio files required.
-    // ==========================
+    // MOTOR DE EFEITOS SONOROS DA INTERFACE DREAMGAZE
+    // Web Audio: não requer arquivos de áudio externos.
+    // Armazena o contexto de áudio e recupera a preferência de áudio salva no navegador.
     const soundState = {
       ctx: null,
       muted: localStorage.getItem("tatsuyadesire97_sfx_muted") === "1"
     };
 
+    // Cria ou reutiliza o contexto da Web Audio API necessário para os efeitos sonoros.
     function getAudioContext() {
       if (!soundState.ctx) {
         const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -303,6 +306,7 @@
       return soundState.ctx;
     }
 
+    // Sintetiza um tom curto, permitindo controlar frequência, duração, volume e tipo de onda.
     function tone(freq=440, duration=.06, volume=.025, type="sine", endFreq=null, delay=0) {
       if (soundState.muted) return;
       const ctx = getAudioContext();
@@ -320,6 +324,7 @@
       osc.start(now); osc.stop(now + duration + .02);
     }
 
+    // Gera um pequeno ruído filtrado usado para complementar alguns efeitos sonoros.
     function noise(duration=.04, volume=.012) {
       if (soundState.muted) return;
       const ctx = getAudioContext();
@@ -336,6 +341,7 @@
       src.buffer = buffer; src.connect(filter); filter.connect(gain); gain.connect(ctx.destination); src.start();
     }
 
+    // Reúne os efeitos sonoros da interface e toca a combinação correspondente a cada ação.
     function playSfx(name) {
       if (soundState.muted) return;
       switch (name) {
@@ -372,6 +378,7 @@
     }
 
 
+    // Mantém as referências dos elementos responsáveis pelo som ambiente contínuo.
     const ambientState = {
       started: false,
       master: null,
@@ -379,6 +386,7 @@
       nodes: []
     };
 
+    // Monta e inicia a paisagem sonora ambiente usando osciladores, ruído e modulação.
     function startAmbientSound() {
       if (ambientState.started || soundState.muted) return;
       const ctx = getAudioContext();
@@ -442,7 +450,7 @@
       lfo.start();
       ambientState.nodes.push(lfo);
 
-      // A barely audible detuned "dream machine" drift.
+      // Oscilador levemente desafinado e quase inaudível para criar uma sensação de deriva sonora.
       const drift = ctx.createOscillator();
       const driftGain = ctx.createGain();
       drift.type = "sine";
@@ -455,6 +463,7 @@
       ambientState.nodes.push(drift);
     }
 
+    // Ajusta suavemente o volume do ambiente conforme o estado de áudio ativado ou silenciado.
     function syncAmbientMute() {
       if (!ambientState.master || !soundState.ctx) return;
       const now = soundState.ctx.currentTime;
@@ -462,6 +471,7 @@
       ambientState.master.gain.setTargetAtTime(soundState.muted ? .0001 : .060, now, .10);
     }
 
+    // Configura o botão de áudio e associa efeitos sonoros às interações da interface.
     function setupSoundFX() {
       const toggle = $("#soundToggle");
       const render = () => {
@@ -500,8 +510,10 @@
       });
     }
 
+    // Converte o nome lógico de uma janela para o ID utilizado no HTML.
     function windowId(name) { return `win-${name}`; }
 
+    // Coloca a janela selecionada em primeiro plano e atualiza seu estado na barra de tarefas.
     function focusWindow(win) {
       if (!win) return;
       state.z += 1;
@@ -512,6 +524,7 @@
       updateTaskbar();
     }
 
+    // Abre uma janela, remove seu estado minimizado e direciona o foco para ela.
     function openWindow(name) {
       const win = document.getElementById(windowId(name));
       if (!win) return;
@@ -527,6 +540,7 @@
       $("#startBtn").classList.remove("pressed");
     }
 
+    // Fecha uma janela e remove suas referências dos estados ativos da interface.
     function closeWindow(win) {
       playSfx("close");
       win.classList.remove("open");
@@ -535,6 +549,7 @@
       updateTaskbar();
     }
 
+    // Oculta a janela sem removê-la da barra de tarefas.
     function minimizeWindow(win) {
       playSfx("minimize");
       win.classList.remove("open");
@@ -542,6 +557,7 @@
       updateTaskbar();
     }
 
+    // Alterna entre o tamanho normal e maximizado, preservando a posição e dimensões anteriores.
     function toggleMaximize(win) {
       playSfx("maximize");
       if (!win.classList.contains("maximized")) {
@@ -557,6 +573,7 @@
       focusWindow(win);
     }
 
+    // Reconstrói os botões da barra de tarefas de acordo com as janelas abertas.
     function updateTaskbar() {
       const taskList = $("#taskList");
       taskList.innerHTML = "";
@@ -582,6 +599,7 @@
       });
     }
 
+    // Configura fechar, minimizar, maximizar, focar e arrastar as janelas pelo desktop.
     function setupWindowControls() {
       $$(".window").forEach(win => {
         $(".close-btn", win).addEventListener("click", () => closeWindow(win));
@@ -613,6 +631,7 @@
       });
     }
 
+    // Configura ícones e arquivos que podem abrir janelas por clique, duplo clique, teclado ou toque.
     function setupOpeners() {
       $$("[data-open]").forEach(el => {
         let lastTap = 0;
@@ -637,6 +656,7 @@
       });
     }
 
+    // Exibe uma notificação temporária na interface.
     function toast(message, ms=2600) {
       const t = $("#toast");
       t.textContent = message;
@@ -646,6 +666,7 @@
     }
 
 
+    // Executa a sequência visual fictícia de desligamento do sistema.
     function runShutdownSequence() {
       const screen = $("#shutdownScreen");
       const title = $("#shutdownTitle");
@@ -680,6 +701,7 @@
       }, 2200);
     }
 
+    // Cancela a sequência de desligamento e restaura a interface principal.
     function restartFromShutdown() {
       clearTimeout(runShutdownSequence.t1);
       clearTimeout(runShutdownSequence.t2);
@@ -691,6 +713,7 @@
       playSfx("open");
     }
 
+    // Configura a abertura do menu iniciar e as ações de desligar e reiniciar.
     function setupStart() {
       const btn = $("#startBtn");
       const menu = $("#startMenu");
@@ -710,6 +733,7 @@
       $("#restartBtn").addEventListener("click", restartFromShutdown);
     }
 
+    // Atualiza o relógio da barra de tarefas e controla o easter egg associado aos cliques nele.
     function setupClock() {
       const clock = $("#clock");
       const update = () => {
@@ -727,6 +751,7 @@
       });
     }
 
+    // Adiciona uma nova linha ao terminal e mantém a rolagem posicionada no conteúdo mais recente.
     function appendTerminal(text="") {
       const out = $("#terminalOutput");
       const div = document.createElement("div");
@@ -736,6 +761,7 @@
       $("#terminal").scrollTop = $("#terminal").scrollHeight;
     }
 
+    // Interpreta os comandos digitados no terminal e executa a ação correspondente.
     function runCommand(input) {
       const cmd = input.trim().toLowerCase();
       appendTerminal(`C:\\TATSUYA> ${input}`);
@@ -788,8 +814,10 @@
       appendTerminal(commands[cmd] ?? `Bad command or file name: ${cmd || "(empty)"}`);
     }
 
+    // Lista das classes de temas alternativos que podem ser aplicadas ao documento.
     const themeClasses = ["theme-spectral", "theme-moonmilk", "theme-rosefog", "theme-liminalsea"];
 
+    // Aplica o tema solicitado e, quando desejado, salva a escolha no navegador.
     function applyTheme(name, persist=true) {
       const themes = {
         dreamgaze: null,
@@ -805,11 +833,13 @@
       return true;
     }
 
+    // Recupera o último tema escolhido pelo visitante ou utiliza o tema padrão.
     function restoreTheme() {
       const saved = localStorage.getItem("tatsuyadesire97_theme") || "dreamgaze";
       applyTheme(saved, false);
     }
 
+    // Inicializa o terminal e processa os comandos enviados ao pressionar Enter.
     function setupTerminal() {
       const input = $("#terminalInput");
       appendTerminal("TatsuyaDesire/97 Terminal v0.97");
@@ -824,6 +854,7 @@
       });
     }
 
+    // Configura interações escondidas que ativam mensagens e efeitos especiais na interface.
     function setupGothicEasterEggs() {
       const mark = $("#occultMark");
       let clicks = 0;
@@ -845,6 +876,7 @@
       });
     }
 
+    // Configura o arquivo fantasma que ativa temporariamente o modo visual especial.
     function setupGhostFile() {
       $("#ghostFile").addEventListener("dblclick", () => {
         document.body.classList.add("ghost-mode");
@@ -858,11 +890,13 @@
     }
 
 
+    // Lê uma variável de cor definida no CSS e utiliza um valor alternativo caso ela não exista.
     function cssColor(name, fallback) {
       const value = getComputedStyle(document.body).getPropertyValue(name).trim();
       return value || fallback;
     }
 
+    // Converte cores HEX ou RGB para RGBA, permitindo aplicar transparência nos desenhos do canvas.
     function hexToRgba(color, alpha) {
       if (!color) return `rgba(255,255,255,${alpha})`;
       if (color.startsWith("rgb")) {
@@ -879,6 +913,7 @@
       return `rgba(${r},${g},${b},${alpha})`;
     }
 
+    // Inicializa toda a lógica, controles, pontuação e renderização do jogo Snake.
     function setupSnake() {
       const canvas = $("#snakeCanvas");
       const ctx = canvas.getContext("2d");
@@ -902,6 +937,7 @@
 
       highEl.textContent = String(high).padStart(4, "0");
 
+      // Reinicia a partida com a cobra, direção, pontuação e temporizador em seus estados iniciais.
       function reset() {
         snake = [{x: 8, y: 10}, {x: 7, y: 10}, {x: 6, y: 10}];
         dir = {x: 1, y: 0};
@@ -918,6 +954,7 @@
         pauseBtn.textContent = "PAUSE";
       }
 
+      // Posiciona a comida aleatoriamente em uma célula que não esteja ocupada pela cobra.
       function placeFood() {
         do {
           food = {
@@ -927,6 +964,7 @@
         } while (snake.some(s => s.x === food.x && s.y === food.y));
       }
 
+      // Executa um ciclo do jogo: movimenta a cobra, verifica colisões e processa a pontuação.
       function tick() {
         if (!running || paused) return;
         dir = nextDir;
@@ -967,6 +1005,7 @@
         draw();
       }
 
+      // Encerra a partida e desenha a mensagem de fim de jogo sobre o canvas.
       function gameOver() {
         running = false;
         clearInterval(timer);
@@ -981,6 +1020,7 @@
         ctx.fillText("press START / RESTART", canvas.width / 2, canvas.height / 2 + 22);
       }
 
+      // Redesenha o cenário, efeitos visuais, comida, cobra e estados de pausa do jogo.
       function draw() {
         const bg = cssColor("--bg", "#09070d");
         const ink = cssColor("--ink", "#f5f1ff");
@@ -992,7 +1032,7 @@
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Soft fog: broad translucent blooms, fixed enough not to distract.
+        // Névoa suave formada por gradientes translúcidos amplos para não distrair durante o jogo.
         const fog1 = ctx.createRadialGradient(
           canvas.width * .27, canvas.height * .24, 10,
           canvas.width * .27, canvas.height * .24, canvas.width * .42
@@ -1011,7 +1051,7 @@
         ctx.fillStyle = fog2;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Theme-aware grid.
+        // Grade visual que utiliza as cores do tema atualmente selecionado.
         ctx.strokeStyle = hexToRgba(lilac, .065);
         ctx.lineWidth = 1;
         for (let i = 0; i <= grid; i++) {
@@ -1025,7 +1065,7 @@
           ctx.stroke();
         }
 
-        // Dream trail behind the snake.
+        // Rastro visual que desaparece gradualmente atrás da cobra.
         dreamTrail.slice().reverse().forEach((t, i) => {
           const alpha = Math.max(0, t.life) * .12;
           ctx.fillStyle = hexToRgba(i % 2 ? cyan : magenta, alpha);
@@ -1040,7 +1080,7 @@
           ctx.fill();
         });
 
-        // Food with a soft glow.
+        // Desenha a comida com um brilho suave.
         ctx.save();
         ctx.shadowBlur = 12;
         ctx.shadowColor = hexToRgba(magenta, .55);
@@ -1081,6 +1121,7 @@
         }
       }
 
+      // Atualiza a próxima direção da cobra e impede a inversão imediata do movimento.
       function setDirection(x, y) {
         if (x === -dir.x && y === -dir.y) return;
         nextDir = {x, y};
@@ -1107,6 +1148,7 @@
         }
       });
 
+      // Alterna o jogo entre os estados pausado e em execução.
       function togglePause() {
         if (!running) return;
         paused = !paused;
@@ -1120,6 +1162,7 @@
     }
 
 
+    // Ajusta proporcionalmente o player do Spotify ao espaço disponível dentro da janela.
     function setupSpotifyResponsiveScale() {
       const bezel = document.querySelector("#win-music .spotify-bezel");
       const frame = document.getElementById("spotifyPlayer");
@@ -1132,8 +1175,8 @@
         const rect = bezel.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
 
-        // "contain" keeps the full player visible while making it as large
-        // as the current window allows.
+        // Mantém o player inteiro visível enquanto aproveita o máximo possível
+        // do espaço disponível na janela atual.
         const scale = Math.min(rect.width / BASE_W, rect.height / BASE_H);
 
         frame.style.transform =
@@ -1150,12 +1193,13 @@
     restoreTheme();
 
 
+    // Cria um efeito visual temporário no ponto em que o usuário clica diretamente no papel de parede.
     function setupPsychedelicDesktop() {
       const desktop = $("#desktop");
       if (!desktop) return;
 
       desktop.addEventListener("click", e => {
-        // Never react to UI controls or icons; only the wallpaper itself.
+        // Ignora controles e ícones da interface; o efeito ocorre apenas no papel de parede.
         if (e.target.closest(".desktop-icon, .occult-mark")) return;
 
         const rect = desktop.getBoundingClientRect();
@@ -1172,11 +1216,13 @@
 
 
 
+    // Mantém o cursor nativo; função preservada para facilitar futuras experiências visuais com o cursor.
     function setupDreamCursor() {
-      // Native cursor is intentionally used in the stable build.
+      // O cursor nativo é utilizado intencionalmente nesta versão estável.
       return;
     }
 
+    // Inicialização dos principais módulos e comportamentos da interface.
     renderData();
     setupSoundFX();
     makeStars();
