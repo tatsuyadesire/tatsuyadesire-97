@@ -1,4 +1,4 @@
-    /* Variáveis globais de cores, dimensões e tipografia utilizadas em toda a interface. */
+   /* Variáveis globais de cores, dimensões e tipografia utilizadas em toda a interface. */
 :root {
       --bg: #0b1020;
       --panel: #24233d;
@@ -882,8 +882,16 @@
       --cursor-accent: rgba(231, 155, 220, .55);
     }
 
-    html, body, button, a, input, .file, .desktop-icon, .start-item, .occult-mark {
-      cursor: auto !important;
+    html, body {
+      cursor: default !important;
+    }
+
+    button, a, .file, .desktop-icon, .start-item, .occult-mark, [data-open], .task-btn {
+      cursor: pointer !important;
+    }
+
+    input, textarea {
+      cursor: text !important;
     }
 
     /* Elementos do cursor personalizado e de seu rastro visual. */
@@ -1620,13 +1628,16 @@
        Configuração final de estabilidade do cursor
        Mantém o cursor nativo em toda a interface para evitar problemas
        com iframes externos e impedir interferências nos cliques.
-    html, body, body *, body *::before, body *::after {
-      cursor: auto !important;
+    html, body {
+      cursor: default !important;
+    }
+
+    body * {
+      cursor: inherit;
     }
 
     button,
     a,
-    input,
     .file,
     .desktop-icon,
     .start-item,
@@ -1634,6 +1645,11 @@
     [data-open],
     .task-btn {
       cursor: pointer !important;
+    }
+
+    input,
+    textarea {
+      cursor: text !important;
     }
 
     .titlebar {
