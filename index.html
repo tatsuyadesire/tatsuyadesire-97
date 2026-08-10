@@ -8,15 +8,17 @@
   <title>TatsuyaDesire/97 — Portfolio OS</title>
   <link rel="stylesheet" href="style.css">
 </head>
-  <!-- Estrutura visual e interativa do portfólio em formato de sistema operacional. -->
+
+<!-- Estrutura visual e interativa do portfólio em formato de sistema operacional. -->
 <body>
-  
+
   <!-- Elementos visuais do cursor personalizado e de seu rastro. -->
   <div class="dream-cursor-trail" id="dreamCursorTrail" aria-hidden="true"></div>
   <div class="dream-cursor" id="dreamCursor" aria-hidden="true"></div>
 
   <!-- Área principal que representa o desktop do sistema. -->
   <main class="desktop" id="desktop" aria-label="Desktop TatsuyaDesire/97">
+
     <!-- Camadas decorativas do papel de parede: estrelas, névoa, pássaros e easter egg. -->
     <div class="stars" id="stars"></div>
     <div class="mist one"></div>
@@ -33,69 +35,140 @@
 
     <!-- Atalhos principais para abrir as janelas do portfólio. -->
     <section class="desktop-icons" aria-label="Ícones do desktop">
+
       <div class="desktop-icon" data-open="computer" tabindex="0">
-        <span class="icon">▣</span><span>Meu Computador</span>
+        <span class="icon">▣</span>
+        <span>Meu Computador</span>
       </div>
+
       <div class="desktop-icon" data-open="about" tabindex="0">
-        <span class="icon">☺</span><span>Sobre Mim</span>
+        <span class="icon">☺</span>
+        <span>Sobre Mim</span>
       </div>
+
       <div class="desktop-icon" data-open="experience" tabindex="0">
-        <span class="icon">▤</span><span>Experiência</span>
+        <span class="icon">▤</span>
+        <span>Experiência</span>
       </div>
+
       <div class="desktop-icon" data-open="projects" tabindex="0">
-        <span class="icon">▥</span><span>Projetos</span>
+        <span class="icon">▥</span>
+        <span>Projetos</span>
       </div>
+
       <div class="desktop-icon" data-open="skills" tabindex="0">
-        <span class="icon">◆</span><span>Skills.dll</span>
+        <span class="icon">◆</span>
+        <span>Skills.dll</span>
       </div>
+
       <div class="desktop-icon" data-open="competencies" tabindex="0">
-        <span class="icon">✦</span><span>Competências</span>
+        <span class="icon">✦</span>
+        <span>Competências</span>
       </div>
+
       <div class="desktop-icon" data-open="terminal" tabindex="0">
-        <span class="icon">⌘</span><span>Terminal</span>
+        <span class="icon">⌘</span>
+        <span>Terminal</span>
       </div>
+
       <div class="desktop-icon" data-open="music" tabindex="0">
-        <span class="icon">♫</span><span>Music Player</span>
+        <span class="icon">♫</span>
+        <span>Music Player</span>
       </div>
+
       <div class="desktop-icon" data-open="snake" tabindex="0">
-        <span class="icon">≈</span><span>Snake.exe</span>
+        <span class="icon">≈</span>
+        <span>Snake.exe</span>
       </div>
+
       <div class="desktop-icon" data-open="contact" tabindex="0">
-        <span class="icon">⌁</span><span>Contato</span>
+        <span class="icon">⌁</span>
+        <span>Contato</span>
       </div>
+
       <div class="desktop-icon" data-open="trash" tabindex="0">
-        <span class="icon">⌫</span><span>Lixeira</span>
+        <span class="icon">⌫</span>
+        <span>Lixeira</span>
       </div>
+
     </section>
   </main>
 
   <!-- Menu iniciar com atalhos para as principais áreas e opção de desligamento. -->
   <div class="start-menu" id="startMenu">
-    <div class="start-rail">TatsuyaDesire/97</div>
+
+    <div class="start-rail">
+      TatsuyaDesire/97
+    </div>
+
     <div class="start-items">
-      <div class="start-item" data-open="about">☺ Sobre</div>
-      <div class="start-item" data-open="experience">▤ Experiência</div>
-      <div class="start-item" data-open="projects">▥ Projetos</div>
-      <div class="start-item" data-open="competencies">✦ Competências</div>
+
+      <div class="start-item" data-open="about">
+        ☺ Sobre
+      </div>
+
+      <div class="start-item" data-open="experience">
+        ▤ Experiência
+      </div>
+
+      <div class="start-item" data-open="projects">
+        ▥ Projetos
+      </div>
+
+      <div class="start-item" data-open="competencies">
+        ✦ Competências
+      </div>
+
       <div class="separator"></div>
-      <div class="start-item" data-open="terminal">⌘ Terminal</div>
-      <div class="start-item" data-open="music">♫ Music Player</div>
-      <div class="start-item" data-open="snake">≈ Snake.exe</div>
-      <div class="start-item" data-open="contact">⌁ Internet / Contato</div>
+
+      <div class="start-item" data-open="terminal">
+        ⌘ Terminal
+      </div>
+
+      <div class="start-item" data-open="music">
+        ♫ Music Player
+      </div>
+
+      <div class="start-item" data-open="snake">
+        ≈ Snake.exe
+      </div>
+
+      <div class="start-item" data-open="contact">
+        ⌁ Internet / Contato
+      </div>
+
       <div class="separator"></div>
-      <div class="start-item" id="shutdownItem">⏻ Shutdown</div>
+
+      <div class="start-item" id="shutdownItem">
+        ⏻ Shutdown
+      </div>
+
     </div>
   </div>
 
   <!-- Barra de tarefas com botão iniciar, janelas abertas, áudio e relógio. -->
   <footer class="taskbar">
-    <button class="retro-btn start-btn" id="startBtn">✦ Start</button>
+
+    <button class="retro-btn start-btn" id="startBtn">
+      ✦ Start
+    </button>
+
     <div class="task-list" id="taskList"></div>
+
     <div class="tray">
       <span class="net">◉ NET</span>
-      <button class="sound-toggle" id="soundToggle" type="button" title="Sound FX">♪ SFX</button>
+
+      <button
+        class="sound-toggle"
+        id="soundToggle"
+        type="button"
+        title="Sound FX">
+        ♪ SFX
+      </button>
+
       <span id="clock">00:00</span>
     </div>
+
   </footer>
 
   <!-- Área utilizada para mensagens temporárias e easter eggs. -->
@@ -103,232 +176,682 @@
 
   <!-- Tela de desligamento simulada do sistema. -->
   <section class="shutdown" id="shutdownScreen">
+
     <div>
-      <h2 id="shutdownTitle">It is now safe to leave this website.</h2>
-      <p id="shutdownText">TatsuyaDesire/97 has entered dream state.</p>
-      <div class="shutdown-status" id="shutdownStatus"></div>
-      <button class="retro-btn" id="restartBtn">Restart</button>
+
+      <h2 id="shutdownTitle">
+        It is now safe to leave this website.
+      </h2>
+
+      <p id="shutdownText">
+        TatsuyaDesire/97 has entered dream state.
+      </p>
+
+      <div
+        class="shutdown-status"
+        id="shutdownStatus">
+      </div>
+
+      <button
+        class="retro-btn"
+        id="restartBtn">
+        Restart
+      </button>
+
     </div>
   </section>
 
-  <!-- Janelas principais do sistema -->
-  <!-- Janela Meu Computador: reúne atalhos internos para as áreas do portfólio. -->
-  <section class="window" id="win-computer" data-title="Meu Computador" style="left:160px;top:65px;width:620px;height:420px;">
+  <!-- Janela Meu Computador -->
+  <section
+    class="window"
+    id="win-computer"
+    data-title="Meu Computador"
+    style="left:160px;top:65px;width:620px;height:420px;">
+
     <div class="titlebar">
-      <span>▣ Meu Computador</span>
+
+      <span>
+        ▣ Meu Computador
+      </span>
+
       <div class="title-actions">
-        <button class="retro-btn min-btn" aria-label="Minimizar">_</button>
-        <button class="retro-btn max-btn" aria-label="Maximizar">□</button>
-        <button class="retro-btn close-btn" aria-label="Fechar">×</button>
+
+        <button
+          class="retro-btn min-btn"
+          aria-label="Minimizar">
+          _
+        </button>
+
+        <button
+          class="retro-btn max-btn"
+          aria-label="Maximizar">
+          □
+        </button>
+
+        <button
+          class="retro-btn close-btn"
+          aria-label="Fechar">
+          ×
+        </button>
+
       </div>
     </div>
-    <div class="menubar"><span>File</span><span>Edit</span><span>View</span><span>Help</span></div>
-    <div class="window-body" style="padding:0;">
+
+    <div class="menubar">
+      <span>File</span>
+      <span>Edit</span>
+      <span>View</span>
+      <span>Help</span>
+    </div>
+
+    <div
+      class="window-body"
+      style="padding:0;">
+
       <div class="explorer">
+
         <aside class="tree">
-          <strong>C:\</strong><br><br>
+          <strong>C:\</strong>
+          <br><br>
           ├─ ABOUT<br>
           ├─ EXPERIENCE<br>
           ├─ PROJECTS<br>
           ├─ SKILLS<br>
           └─ CONTACT
         </aside>
+
         <div class="files">
-          <div class="file" data-open="about"><span class="ficon">□</span>README.txt</div>
-          <div class="file" data-open="experience"><span class="ficon">▤</span>experience.exe</div>
-          <div class="file" data-open="projects"><span class="ficon">▥</span>projects.exe</div>
-          <div class="file" data-open="skills"><span class="ficon">◆</span>skills.dll</div>
-          <div class="file" data-open="competencies"><span class="ficon">✦</span>competencies.sys</div>
-          <div class="file" data-open="contact"><span class="ficon">⌁</span>contact.url</div>
-          <div class="file" data-open="terminal"><span class="ficon">⌘</span>terminal.exe</div>
+
+          <div class="file" data-open="about">
+            <span class="ficon">□</span>
+            README.txt
+          </div>
+
+          <div class="file" data-open="experience">
+            <span class="ficon">▤</span>
+            experience.exe
+          </div>
+
+          <div class="file" data-open="projects">
+            <span class="ficon">▥</span>
+            projects.exe
+          </div>
+
+          <div class="file" data-open="skills">
+            <span class="ficon">◆</span>
+            skills.dll
+          </div>
+
+          <div class="file" data-open="competencies">
+            <span class="ficon">✦</span>
+            competencies.sys
+          </div>
+
+          <div class="file" data-open="contact">
+            <span class="ficon">⌁</span>
+            contact.url
+          </div>
+
+          <div class="file" data-open="terminal">
+            <span class="ficon">⌘</span>
+            terminal.exe
+          </div>
+
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Janela Sobre Mim: conteúdo preenchido dinamicamente pelo JavaScript. -->
-  <section class="window" id="win-about" data-title="README.txt — Notepad" style="left:240px;top:90px;width:520px;height:360px;">
+  <!-- Janela Sobre Mim -->
+  <section
+    class="window"
+    id="win-about"
+    data-title="README.txt — Notepad"
+    style="left:240px;top:90px;width:520px;height:360px;">
+
     <div class="titlebar">
-      <span>□ README.txt — Notepad</span>
+
+      <span>
+        □ README.txt — Notepad
+      </span>
+
       <div class="title-actions">
-        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
       </div>
+
     </div>
-    <div class="menubar"><span>File</span><span>Edit</span><span>Search</span><span>Help</span></div>
-    <div class="window-body" id="aboutContent"></div>
+
+    <div class="menubar">
+      <span>File</span>
+      <span>Edit</span>
+      <span>Search</span>
+      <span>Help</span>
+    </div>
+
+    <div
+      class="window-body"
+      id="aboutContent">
+    </div>
+
   </section>
 
-  <!-- Janela de experiência profissional e formação acadêmica. -->
-  <section class="window" id="win-experience" data-title="experience.exe" style="left:310px;top:70px;width:560px;height:410px;">
+  <!-- Janela Experiência -->
+  <section
+    class="window"
+    id="win-experience"
+    data-title="experience.exe"
+    style="left:310px;top:70px;width:560px;height:410px;">
+
     <div class="titlebar">
-      <span>▤ experience.exe</span>
+
+      <span>
+        ▤ experience.exe
+      </span>
+
       <div class="title-actions">
-        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
       </div>
+
     </div>
-    <div class="menubar"><span>Timeline</span><span>Logs</span><span>System</span></div>
-    <div class="window-body" id="experienceContent"></div>
+
+    <div class="menubar">
+      <span>Timeline</span>
+      <span>Logs</span>
+      <span>System</span>
+    </div>
+
+    <div
+      class="window-body"
+      id="experienceContent">
+    </div>
+
   </section>
 
-  <!-- Janela de projetos publicados e informações técnicas. -->
-  <section class="window" id="win-projects" data-title="projects.exe" style="left:180px;top:100px;width:650px;height:430px;">
+  <!-- Janela Projetos -->
+  <section
+    class="window"
+    id="win-projects"
+    data-title="projects.exe"
+    style="left:180px;top:100px;width:650px;height:430px;">
+
     <div class="titlebar">
-      <span>▥ projects.exe</span>
+
+      <span>
+        ▥ projects.exe
+      </span>
+
       <div class="title-actions">
-        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
       </div>
+
     </div>
-    <div class="menubar"><span>Projects</span><span>Preview</span><span>Links</span></div>
-    <div class="window-body" id="projectsContent"></div>
+
+    <div class="menubar">
+      <span>Projects</span>
+      <span>Preview</span>
+      <span>Links</span>
+    </div>
+
+    <div
+      class="window-body"
+      id="projectsContent">
+    </div>
+
   </section>
 
-  <!-- Janela de habilidades e tecnologias utilizadas. -->
-  <section class="window" id="win-skills" data-title="skills.dll" style="left:380px;top:120px;width:470px;height:370px;">
+  <!-- Janela Skills -->
+  <section
+    class="window"
+    id="win-skills"
+    data-title="skills.dll"
+    style="left:380px;top:120px;width:470px;height:370px;">
+
     <div class="titlebar">
-      <span>◆ skills.dll</span>
+
+      <span>
+        ◆ skills.dll
+      </span>
+
       <div class="title-actions">
-        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
       </div>
+
     </div>
-    <div class="menubar"><span>Modules</span><span>Status</span><span>Properties</span></div>
-    <div class="window-body" id="skillsContent"></div>
+
+    <div class="menubar">
+      <span>Modules</span>
+      <span>Status</span>
+      <span>Properties</span>
+    </div>
+
+    <div
+      class="window-body"
+      id="skillsContent">
+    </div>
+
   </section>
 
-  <!-- Janela de competências, formações complementares e experiências adicionais. -->
-  <section class="window" id="win-competencies" data-title="competencies.sys" style="left:300px;top:90px;width:590px;height:430px;">
+  <!-- Janela Competências -->
+  <section
+    class="window"
+    id="win-competencies"
+    data-title="competencies.sys"
+    style="left:300px;top:90px;width:590px;height:430px;">
+
     <div class="titlebar">
-      <span>✦ competencies.sys</span>
+
+      <span>
+        ✦ competencies.sys
+      </span>
+
       <div class="title-actions">
-        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
       </div>
+
     </div>
-    <div class="menubar"><span>Training</span><span>Projects</span><span>Background</span></div>
-    <div class="window-body" id="competenciesContent"></div>
+
+    <div class="menubar">
+      <span>Training</span>
+      <span>Projects</span>
+      <span>Background</span>
+    </div>
+
+    <div
+      class="window-body"
+      id="competenciesContent">
+    </div>
+
   </section>
 
-  <!-- Janela de contato com links externos e status profissional. -->
-  <section class="window" id="win-contact" data-title="Internet — Contact Hub" style="left:270px;top:110px;width:520px;height:330px;">
+  <!-- Janela Contato -->
+  <section
+    class="window"
+    id="win-contact"
+    data-title="Internet — Contact Hub"
+    style="left:270px;top:110px;width:520px;height:330px;">
+
     <div class="titlebar">
-      <span>⌁ Internet — Contact Hub</span>
+
+      <span>
+        ⌁ Internet — Contact Hub
+      </span>
+
       <div class="title-actions">
-        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
       </div>
+
     </div>
-    <div class="menubar"><span>Go</span><span>Favorites</span><span>Mail</span></div>
-    <div class="window-body" id="contactContent"></div>
+
+    <div class="menubar">
+      <span>Go</span>
+      <span>Favorites</span>
+      <span>Mail</span>
+    </div>
+
+    <div
+      class="window-body"
+      id="contactContent">
+    </div>
+
   </section>
 
-  <!-- Terminal interativo que recebe comandos e ativa algumas funcionalidades e easter eggs. -->
-  <section class="window" id="win-terminal" data-title="TatsuyaDesire/97 Terminal" style="left:200px;top:140px;width:600px;height:350px;">
+  <!-- Terminal -->
+  <section
+    class="window"
+    id="win-terminal"
+    data-title="TatsuyaDesire/97 Terminal"
+    style="left:200px;top:140px;width:600px;height:350px;">
+
     <div class="titlebar">
-      <span>⌘ TatsuyaDesire/97 Terminal</span>
+
+      <span>
+        ⌘ TatsuyaDesire/97 Terminal
+      </span>
+
       <div class="title-actions">
-        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
       </div>
+
     </div>
-    <div class="window-body" style="padding:0;overflow:hidden;">
-      <div class="terminal" id="terminal">
+
+    <div
+      class="window-body"
+      style="padding:0;overflow:hidden;">
+
+      <div
+        class="terminal"
+        id="terminal">
+
         <div id="terminalOutput"></div>
-        <div class="terminal-input-line"><span>C:\TATSUYA&gt;</span><input id="terminalInput" autocomplete="off" spellcheck="false" /></div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Janela do player de música com uma playlist incorporada do Spotify. -->
-  <section class="window" id="win-music" data-title="Music Player — Spotify" style="left:150px;top:70px;width:460px;height:500px;">
-    <div class="titlebar">
-      <span>♫ Music Player — Spotify</span>
-      <div class="title-actions">
-        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
-      </div>
-    </div>
-    <div class="menubar"><span>Playlist</span><span>Playback</span><span>Dream Radio</span></div>
-    <div class="window-body">
-      <div class="music-shell">
-        <div class="retro-player">
-          <!-- Painel visual que simula um display de rádio retrô. -->
-          <div class="retro-player-display">
-            <div>
-              DREAM RADIO / SPOTIFY LINK<br>
-              <span style="color:#91b9a4">SIGNAL: ONLINE // PLAYBACK: EMBED</span>
-            </div>
-            <div class="retro-player-led" aria-hidden="true"><i></i><i></i></div>
-          </div>
+        <div class="terminal-input-line">
 
-          <!-- Indicadores visuais do player, usados apenas como parte da estética da interface. -->
-          <div class="retro-player-controls">
-            <span class="retro-player-chip">STEREO</span>
-            <span class="retro-player-chip">TAPE HISS</span>
-            <span class="retro-player-chip">EXT. SIGNAL</span>
-            
-          </div>
+          <span>
+            C:\TATSUYA&gt;
+          </span>
 
-          <!-- Moldura que contém o player oficial incorporado do Spotify. -->
-          <div class="spotify-bezel">
-            <iframe
-              id="spotifyPlayer"
-              class="spotify-frame"
-              title="Spotify playlist player"
-              src="https://open.spotify.com/embed/playlist/4q1WUAmxvHidA7KlOJ7Rh3?utm_source=generator&theme=0"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy">
-            </iframe>
-          </div>
+          <input
+            id="terminalInput"
+            autocomplete="off"
+            spellcheck="false"
+          />
+
         </div>
+
       </div>
     </div>
   </section>
 
-  <!-- Janela do jogo Snake, controlado pelo JavaScript e desenhado em canvas. -->
-  <section class="window" id="win-snake" data-title="Snake.exe" style="left:250px;top:65px;width:630px;height:520px;">
+  <!-- Janela do player de música -->
+  <section
+    class="window"
+    id="win-music"
+    data-title="Music Player — Spotify"
+    style="left:150px;top:70px;width:460px;height:500px;">
+
     <div class="titlebar">
-      <span>≈ Snake.exe</span>
+
+      <span>
+        ♫ Music Player — Spotify
+      </span>
+
       <div class="title-actions">
-        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
       </div>
+
     </div>
-    <div class="menubar"><span>Game</span><span>Score</span><span>Help</span></div>
+
+    <div class="menubar">
+      <span>Playlist</span>
+      <span>Playback</span>
+      <span>Dream Radio</span>
+    </div>
+
     <div class="window-body">
+
+      <div class="music-shell">
+
+        <div class="retro-player">
+
+          <!-- Painel visual -->
+          <div class="retro-player-display">
+
+            <div>
+              DREAM RADIO / SPOTIFY LINK
+              <br>
+
+              <span
+                id="spotifyStatus"
+                style="color:#91b9a4">
+
+                SIGNAL: STANDBY // EXTERNAL CONTENT
+
+              </span>
+            </div>
+
+            <div
+              class="retro-player-led"
+              aria-hidden="true">
+
+              <i></i>
+              <i></i>
+
+            </div>
+
+          </div>
+
+          <!-- Indicadores visuais -->
+          <div class="retro-player-controls">
+
+            <span class="retro-player-chip">
+              STEREO
+            </span>
+
+            <span class="retro-player-chip">
+              TAPE HISS
+            </span>
+
+            <span class="retro-player-chip">
+              EXT. SIGNAL
+            </span>
+
+          </div>
+
+          <!-- Área do Spotify -->
+          <div class="spotify-bezel">
+
+            <!--
+              O Spotify NÃO possui iframe neste HTML.
+              O iframe será criado via JavaScript somente
+              depois que o visitante escolher carregar.
+            -->
+
+            <div
+              class="spotify-consent-box"
+              id="spotifyConsentBox">
+
+              <p>
+                Este player utiliza conteúdo fornecido pelo Spotify.
+              </p>
+
+              <p>
+                Ao carregar o player, o Spotify poderá utilizar cookies,
+                tecnologias semelhantes e processar informações conforme
+                suas próprias políticas.
+              </p>
+
+              <div class="spotify-consent-actions">
+
+                <button
+                  class="retro-btn"
+                  id="acceptSpotify"
+                  type="button">
+
+                  Carregar Spotify
+
+                </button>
+
+                <button
+                  class="retro-btn"
+                  id="rejectSpotify"
+                  type="button">
+
+                  Não carregar
+
+                </button>
+
+              </div>
+
+              <p class="spotify-privacy-link">
+
+                <a
+                  href="privacy.html"
+                  target="_blank"
+                  rel="noopener">
+
+                  Política de Privacidade
+
+                </a>
+
+              </p>
+
+            </div>
+
+            <!--
+              O JavaScript adicionará o iframe do Spotify
+              dentro deste elemento.
+            -->
+            <div
+              id="spotifyEmbedContainer"
+              class="spotify-embed-container">
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Snake -->
+  <section
+    class="window"
+    id="win-snake"
+    data-title="Snake.exe"
+    style="left:250px;top:65px;width:630px;height:520px;">
+
+    <div class="titlebar">
+
+      <span>
+        ≈ Snake.exe
+      </span>
+
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
+      </div>
+
+    </div>
+
+    <div class="menubar">
+      <span>Game</span>
+      <span>Score</span>
+      <span>Help</span>
+    </div>
+
+    <div class="window-body">
+
       <div class="snake-wrap">
-        <!-- Área gráfica onde o jogo da cobrinha é renderizado. -->
-        <canvas id="snakeCanvas" width="420" height="420" aria-label="Jogo da cobrinha"></canvas>
-        <!-- Painel lateral com pontuação, recorde, controles e instruções do jogo. -->
+
+        <canvas
+          id="snakeCanvas"
+          width="420"
+          height="420"
+          aria-label="Jogo da cobrinha">
+        </canvas>
+
         <aside class="snake-panel">
+
           <b>SCORE</b>
-          <div class="snake-score" id="snakeScore">0000</div>
+
+          <div
+            class="snake-score"
+            id="snakeScore">
+            0000
+          </div>
+
           <b>HIGH SCORE</b>
-          <div class="snake-score" id="snakeHighScore">0000</div>
-          <button class="retro-btn" id="snakeStartBtn">START / RESTART</button>
-          <button class="retro-btn" id="snakePauseBtn">PAUSE</button>
+
+          <div
+            class="snake-score"
+            id="snakeHighScore">
+            0000
+          </div>
+
+          <button
+            class="retro-btn"
+            id="snakeStartBtn">
+
+            START / RESTART
+
+          </button>
+
+          <button
+            class="retro-btn"
+            id="snakePauseBtn">
+
+            PAUSE
+
+          </button>
+
           <p class="snake-help">
-            CONTROLS<br>
-            ↑ ↓ ← →<br>
-            ou WASD<br><br>
+            CONTROLS
+            <br>
+            ↑ ↓ ← →
+            <br>
+            ou WASD
+            <br><br>
             Space = pause
           </p>
+
         </aside>
+
       </div>
+
     </div>
+
   </section>
 
-  <!-- Lixeira do sistema contendo um easter egg interativo. -->
-  <section class="window" id="win-trash" data-title="Lixeira" style="left:420px;top:170px;width:360px;height:260px;">
+  <!-- Lixeira -->
+  <section
+    class="window"
+    id="win-trash"
+    data-title="Lixeira"
+    style="left:420px;top:170px;width:360px;height:260px;">
+
     <div class="titlebar">
-      <span>⌫ Lixeira</span>
+
+      <span>
+        ⌫ Lixeira
+      </span>
+
       <div class="title-actions">
-        <button class="retro-btn min-btn">_</button><button class="retro-btn max-btn">□</button><button class="retro-btn close-btn">×</button>
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
       </div>
+
     </div>
+
     <div class="window-body">
+
       <div class="panel">
-        <p>1 item found.</p>
-        <div class="file" id="ghostFile"><span class="ficon">👾</span>definitely_not_a_ghost.exe</div>
+
+        <p>
+          1 item found.
+        </p>
+
+        <div
+          class="file"
+          id="ghostFile">
+
+          <span class="ficon">
+            👾
+          </span>
+
+          definitely_not_a_ghost.exe
+
+        </div>
+
       </div>
+
     </div>
+
   </section>
 
-  <!-- Carrega a lógica responsável pelas janelas, sons, temas, terminal, Snake e demais interações. -->
+  <!-- Carrega a lógica JavaScript do site. -->
   <script src="script.js"></script>
+
 </body>
 </html>
 
