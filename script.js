@@ -1,6 +1,4 @@
-// ==========================
-    // EDITE SEUS DADOS AQUI
-    // ==========================
+// Dados principais
     const portfolioData = {
       name: "B. Tatsuya",
       nickname: "Lou",
@@ -281,10 +279,9 @@
       }
     }
 
-    // ==========================
-    // DREAMGAZE UI SOUND ENGINE
-    // Web Audio: no external audio files required.
-    // ==========================
+    // MOTOR DE ÁUDIO DA INTERFACE DREAMGAZE
+    // Web Audio: não requer arquivos de áudio externos.
+
     const soundState = {
       ctx: null,
       muted: localStorage.getItem("tatsuyadesire97_sfx_muted") === "1"
@@ -439,7 +436,7 @@
       lfo.start();
       ambientState.nodes.push(lfo);
 
-      // A barely audible detuned "dream machine" drift.
+      // Uma oscilação desafinada quase inaudível para criar uma atmosfera de "máquina dos sonhos".
       const drift = ctx.createOscillator();
       const driftGain = ctx.createGain();
       drift.type = "sine";
@@ -1032,7 +1029,7 @@
         ctx.fillStyle = bg;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Soft fog: broad translucent blooms, fixed enough not to distract.
+        // Névoa suave: áreas amplas e translúcidas, estáveis para não distrair.
         const fog1 = ctx.createRadialGradient(
           canvas.width * .27, canvas.height * .24, 10,
           canvas.width * .27, canvas.height * .24, canvas.width * .42
@@ -1051,7 +1048,7 @@
         ctx.fillStyle = fog2;
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Theme-aware grid.
+        // Grade adaptada ao tema atual.
         ctx.strokeStyle = hexToRgba(lilac, .065);
         ctx.lineWidth = 1;
         for (let i = 0; i <= grid; i++) {
@@ -1065,7 +1062,7 @@
           ctx.stroke();
         }
 
-        // Dream trail behind the snake.
+        // Rastro de sonho atrás da cobra.
         dreamTrail.slice().reverse().forEach((t, i) => {
           const alpha = Math.max(0, t.life) * .12;
           ctx.fillStyle = hexToRgba(i % 2 ? cyan : magenta, alpha);
@@ -1080,7 +1077,7 @@
           ctx.fill();
         });
 
-        // Food with a soft glow.
+        // Comida com um brilho suave.
         ctx.save();
         ctx.shadowBlur = 12;
         ctx.shadowColor = hexToRgba(magenta, .55);
@@ -1172,8 +1169,8 @@
         const rect = bezel.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
 
-        // "contain" keeps the full player visible while making it as large
-        // as the current window allows.
+        // "contain" mantém o player inteiro visível, deixando-o o maior possível
+        // dentro do espaço disponível na janela atual.
         const scale = Math.min(rect.width / BASE_W, rect.height / BASE_H);
 
         frame.style.transform =
@@ -1195,7 +1192,7 @@
       if (!desktop) return;
 
       desktop.addEventListener("click", e => {
-        // Never react to UI controls or icons; only the wallpaper itself.
+        // Não reage aos controles ou ícones da interface; apenas ao papel de parede.
         if (e.target.closest(".desktop-icon, .occult-mark")) return;
 
         const rect = desktop.getBoundingClientRect();
@@ -1213,7 +1210,7 @@
 
 
     function setupDreamCursor() {
-      // Native cursor is intentionally used in the stable build.
+      // O cursor nativo é usado intencionalmente na versão estável.
       return;
     }
 
