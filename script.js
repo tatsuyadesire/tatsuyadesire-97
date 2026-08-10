@@ -1,6 +1,3 @@
-// ==========================
-    // EDITE SEUS DADOS AQUI
-    // ==========================
     const portfolioData = {
       name: "B. Tatsuya",
       nickname: "Lou",
@@ -160,11 +157,17 @@
       return `<a href="${url}" target="_blank" rel="noopener">${label}</a>`;
     }
 
-    function renderData() {
-      const spotifyPlayer = $("#spotifyPlayer");
-      if (spotifyPlayer && portfolioData.spotify?.embedUrl) {
-        spotifyPlayer.src = portfolioData.spotify.embedUrl;
-      }
+function renderData() {
+
+  /* SPOTIFY - CARREGAMENTO AUTOMÁTICO ANTIGO
+  const spotifyPlayer = $("#spotifyPlayer");
+  if (spotifyPlayer && portfolioData.spotify?.embedUrl) {
+    spotifyPlayer.src = portfolioData.spotify.embedUrl;
+  }
+  */
+
+  $("#aboutContent").innerHTML = `
+
 
       $("#aboutContent").innerHTML = `
         <div class="hero-bio">
