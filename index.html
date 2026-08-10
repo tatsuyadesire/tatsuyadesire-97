@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#160f24" />
   <title>TatsuyaDesire/97 — Portfolio OS</title>
   <link rel="stylesheet" href="style.css">
+
 </head>
 <body>
   
@@ -50,6 +51,9 @@
       <div class="desktop-icon" data-open="music" tabindex="0">
         <span class="icon">♫</span><span>Music Player</span>
       </div>
+      <div class="desktop-icon" data-open="privacy" tabindex="0">
+        <span class="icon">□</span><span>privacy.txt</span>
+      </div>
       <div class="desktop-icon" data-open="snake" tabindex="0">
         <span class="icon">≈</span><span>Snake.exe</span>
       </div>
@@ -72,6 +76,7 @@
       <div class="separator"></div>
       <div class="start-item" data-open="terminal">⌘ Terminal</div>
       <div class="start-item" data-open="music">♫ Music Player</div>
+      <div class="start-item" data-open="privacy">□ privacy.txt</div>
       <div class="start-item" data-open="snake">≈ Snake.exe</div>
       <div class="start-item" data-open="contact">⌁ Internet / Contato</div>
       <div class="separator"></div>
@@ -242,13 +247,40 @@
           </div>
 
           <div class="spotify-bezel">
+            <div class="spotify-consent" id="spotifyConsent">
+              <div class="spotify-consent-box">
+                <div class="spotify-consent-title">EXTERNAL_CONNECTION.EXE</div>
+                <p>
+                  Este player é fornecido pelo Spotify. Ao carregá-lo,
+                  seu navegador irá se conectar aos servidores do Spotify,
+                  que poderá usar cookies e tecnologias semelhantes.
+                </p>
+                <div class="spotify-consent-actions">
+                  <button class="retro-btn" id="loadSpotifyBtn" type="button">
+                    CONECTAR AO SPOTIFY
+                  </button>
+                  <button class="retro-btn" id="cancelSpotifyBtn" type="button">
+                    CANCELAR
+                  </button>
+                  <a
+                    href="https://www.spotify.com/br-pt/legal/cookies-policy/"
+                    target="_blank"
+                    rel="noopener noreferrer">
+                    Política de cookies do Spotify
+                  </a>
+                </div>
+              </div>
+            </div>
+
             <iframe
               id="spotifyPlayer"
               class="spotify-frame"
               title="Spotify playlist player"
-              src="https://open.spotify.com/embed/playlist/4q1WUAmxvHidA7KlOJ7Rh3?utm_source=generator&theme=0"
-              allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-              loading="lazy">
+              src="about:blank"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"
+              hidden>
             </iframe>
           </div>
         </div>
@@ -297,6 +329,47 @@
         <p>1 item found.</p>
         <div class="file" id="ghostFile"><span class="ficon">👾</span>definitely_not_a_ghost.exe</div>
       </div>
+    </div>
+  </section>
+
+  <section class="window" id="win-privacy" data-title="privacy.txt — Notepad" style="left:330px;top:95px;width:560px;height:430px;">
+    <div class="titlebar">
+      <span>□ privacy.txt — Notepad</span>
+      <div class="title-actions">
+        <button class="retro-btn min-btn">_</button>
+        <button class="retro-btn max-btn">□</button>
+        <button class="retro-btn close-btn">×</button>
+      </div>
+    </div>
+    <div class="menubar"><span>File</span><span>Edit</span><span>View</span><span>Help</span></div>
+    <div class="window-body">
+      <h2>PRIVACIDADE</h2>
+      <p>Este portfólio não utiliza ferramentas próprias de publicidade, analytics ou rastreamento de visitantes.</p>
+
+      <div class="panel" style="margin-bottom:10px">
+        <b>DADOS SALVOS NO SEU NAVEGADOR</b>
+        <p>Algumas preferências funcionais podem ser armazenadas localmente no seu navegador, como tema visual, preferência de efeitos sonoros e recorde do jogo Snake. Esses dados permanecem no seu dispositivo e são usados apenas para manter essas preferências.</p>
+      </div>
+
+      <div class="panel" style="margin-bottom:10px">
+        <b>SPOTIFY</b>
+        <p>O Music Player utiliza conteúdo incorporado do Spotify. O Spotify não é carregado automaticamente: a conexão com os servidores do Spotify só é iniciada depois que você escolhe “CONECTAR AO SPOTIFY”.</p>
+        <p>Depois da conexão, o Spotify poderá utilizar cookies e tecnologias semelhantes de acordo com suas próprias políticas.</p>
+        <p>
+          <a href="https://www.spotify.com/br-pt/legal/cookies-policy/"
+             target="_blank"
+             rel="noopener noreferrer">
+            Política de Cookies do Spotify
+          </a>
+        </p>
+      </div>
+
+      <div class="panel">
+        <b>CONTROLE</b>
+        <p>Se você não quiser estabelecer conexão com o Spotify, escolha “CANCELAR” ou feche o Music Player. As preferências locais deste portfólio também podem ser removidas apagando os dados do site nas configurações do navegador.</p>
+      </div>
+
+      <p style="color:var(--muted);margin-top:12px">Última atualização: agosto de 2026.</p>
     </div>
   </section>
 

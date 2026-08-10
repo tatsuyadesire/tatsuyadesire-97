@@ -2051,3 +2051,70 @@
     body #win-snake .snake-help {
       color: var(--muted) !important;
     }
+
+    /* =========================================================
+       SPOTIFY PRIVACY GATE
+       No external Spotify request is made until explicit click.
+       ========================================================= */
+    .spotify-consent {
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background:
+        radial-gradient(circle at 50% 40%,
+          color-mix(in srgb, var(--magenta) 10%, transparent),
+          transparent 34%),
+        color-mix(in srgb, var(--bg) 76%, #000);
+    }
+
+    .spotify-consent-box {
+      width: min(100%, 360px);
+      padding: 14px;
+      border-top: 2px solid color-mix(in srgb, var(--panel-3) 78%, var(--lilac) 22%);
+      border-left: 2px solid color-mix(in srgb, var(--panel-3) 78%, var(--lilac) 22%);
+      border-right: 2px solid color-mix(in srgb, var(--shadow) 94%, #000);
+      border-bottom: 2px solid color-mix(in srgb, var(--shadow) 94%, #000);
+      background: color-mix(in srgb, var(--panel) 88%, #000);
+      color: var(--ink);
+      box-shadow: 6px 6px 0 rgba(0,0,0,.25);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .spotify-consent-title {
+      margin-bottom: 10px;
+      color: var(--lilac);
+      font-weight: bold;
+      letter-spacing: .05em;
+    }
+
+    .spotify-consent-box p {
+      margin: 0 0 12px;
+      color: var(--muted);
+    }
+
+    .spotify-consent-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      align-items: flex-start;
+    }
+
+    .spotify-consent-actions .retro-btn {
+      padding: 7px 10px;
+    }
+
+    .spotify-consent-actions a {
+      font-size: 10px;
+    }
+
+    .spotify-consent[hidden] {
+      display: none !important;
+    }
+
+    #spotifyPlayer[hidden] {
+      display: none !important;
+    }

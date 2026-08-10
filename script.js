@@ -1,4 +1,6 @@
-// Dados principais
+// ==========================
+    // EDITE SEUS DADOS AQUI
+    // ==========================
     const portfolioData = {
       name: "B. Tatsuya",
       nickname: "Lou",
@@ -159,11 +161,8 @@
     }
 
     function renderData() {
-      const spotifyPlayer = $("#spotifyPlayer");
-      if (spotifyPlayer && portfolioData.spotify?.embedUrl) {
-        spotifyPlayer.src = portfolioData.spotify.embedUrl;
-      }
-
+      // Spotify não é carregado aqui.
+      // O iframe externo só recebe a URL quando a janela Music Player é aberta.
       $("#aboutContent").innerHTML = `
         <div class="hero-bio">
           <div class="avatar"><img src="tatsuya_profile.png" alt="Imagem de perfil de B. Tatsuya"></div>
@@ -510,6 +509,46 @@
       updateTaskbar();
     }
 
+    let spotifyLoaded = false;
+
+    function loadSpotifyOnDemand() {
+      if (spotifyLoaded) return;
+
+      const player = $("#spotifyPlayer");
+      const consent = $("#spotifyConsent");
+      const url = portfolioData.spotify?.embedUrl;
+
+      if (!player || !url) return;
+
+      player.hidden = false;
+      player.src = url;
+      spotifyLoaded = true;
+
+      if (consent) consent.hidden = true;
+    }
+
+    function setupSpotifyPrivacyGate() {
+      const button = $("#loadSpotifyBtn");
+      const cancelButton = $("#cancelSpotifyBtn");
+
+      if (button) {
+        button.addEventListener("click", () => {
+          loadSpotifyOnDemand();
+          setTimeout(() => {
+            const bezel = document.querySelector("#win-music .spotify-bezel");
+            if (bezel) bezel.dispatchEvent(new Event("resize"));
+          }, 0);
+        });
+      }
+
+      if (cancelButton) {
+        cancelButton.addEventListener("click", () => {
+          const musicWin = $("#win-music");
+          if (musicWin) closeWindow(musicWin);
+        });
+      }
+    }
+
     function openWindow(name) {
       const win = document.getElementById(windowId(name));
       if (!win) return;
@@ -520,6 +559,9 @@
       state.minimized.delete(win.id);
       focusWindow(win);
       updateTaskbar();
+
+      // O Spotify NÃO carrega ao abrir a janela.
+      // A conexão externa só começa após o clique explícito no botão.
       if (name === "terminal") setTimeout(() => $("#terminalInput").focus(), 40);
       $("#startMenu").classList.remove("open");
       $("#startBtn").classList.remove("pressed");
@@ -1189,6 +1231,7 @@
     setupDreamCursor();
     setupPsychedelicDesktop();
     setupSpotifyResponsiveScale();
+    setupSpotifyPrivacyGate();
 
     // Abre uma janela inicial discreta.
     setTimeout(() => openWindow("about"), 450);
