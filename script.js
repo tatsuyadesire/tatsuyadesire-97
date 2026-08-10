@@ -1240,3 +1240,5 @@
 
     // Abre uma janela inicial discreta.
     setTimeout(() => openWindow("about"), 450);
+
+    // TatsuyaDesire - 2026
