@@ -1583,46 +1583,91 @@
     }
 
     /* Moldura interna que limita e recorta visualmente o iframe do Spotify. */
-    .spotify-bezel {
-      position: relative;
-      min-height: 0;
-      padding: 5px;
-      background: #080809;
-      border-top: 2px solid #080709;
-      border-left: 2px solid #080709;
-      border-right: 2px solid #724b64;
-      border-bottom: 2px solid #724b64;
-      overflow: hidden;
-    }
+.spotify-bezel .spotify-frame {
+  display: block;
+  height: 100%;
+  min-height: 300px;
+  border-radius: 0 !important;
+  filter: saturate(.82) contrast(1.04) brightness(.92);
+}
 
-    .spotify-bezel::after {
-      content: "";
-      position: absolute;
-      inset: 5px;
-      pointer-events: none;
-      z-index: 2;
-      background:
-        repeating-linear-gradient(
-          to bottom,
-          rgba(255,255,255,.012) 0 1px,
-          transparent 1px 4px
-        );
-      mix-blend-mode: screen;
-      opacity: .45;
-    }
+/* Caixa exibida antes do carregamento do conteúdo externo do Spotify. */
+.spotify-consent-box {
+  position: absolute;
+  inset: 5px;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px;
+  text-align: center;
+  background:
+    radial-gradient(
+      circle at 50% 24%,
+      color-mix(in srgb, var(--magenta) 8%, transparent),
+      transparent 38%
+    ),
+    color-mix(in srgb, var(--bg) 88%, #000);
+  color: var(--ink);
+  overflow: auto;
+}
 
-    .spotify-bezel .spotify-frame {
-      display: block;
-      height: 100%;
-      min-height: 300px;
-      border-radius: 0 !important;
-      filter: saturate(.82) contrast(1.04) brightness(.92);
-    }
+.spotify-consent-box p {
+  width: min(100%, 340px);
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
 
-    @media (max-width: 720px) {
-      .retro-player-volume-note { display: none; }
-      .spotify-bezel .spotify-frame { min-height: 360px; }
-    }
+.spotify-consent-box p:first-child {
+  color: var(--lilac);
+  font-weight: bold;
+}
+
+.spotify-consent-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.spotify-consent-actions .retro-btn,
+#loadSpotifyLater {
+  min-width: 130px;
+  padding: 7px 10px;
+}
+
+.spotify-privacy-link {
+  margin-top: 2px !important;
+}
+
+.spotify-privacy-link a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+
+.spotify-privacy-link a:hover {
+  text-decoration: underline;
+}
+
+/* Área onde o iframe do Spotify é inserido somente após a autorização. */
+.spotify-embed-container {
+  position: absolute;
+  inset: 5px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (max-width: 720px) {
+  .retro-player-volume-note { display: none; }
+  .spotify-bezel .spotify-frame { min-height: 360px; }
+}
 
   
        Configuração final de estabilidade do cursor
