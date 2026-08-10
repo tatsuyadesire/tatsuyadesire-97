@@ -1,6 +1,4 @@
-// ==========================
-    // EDITE SEUS DADOS AQUI
-    // ==========================
+// Dados principais
     const portfolioData = {
       name: "B. Tatsuya",
       nickname: "Lou",
