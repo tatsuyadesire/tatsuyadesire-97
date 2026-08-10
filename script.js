@@ -1122,6 +1122,18 @@ function renderData() {
       draw();
     }
 
+function setupSpotifyConsent() {
+  const button = $("#loadSpotify");
+  const player = $("#spotifyPlayer");
+  const consent = $("#spotifyConsent");
+
+  if (!button || !player || !consent) return;
+
+  button.addEventListener("click", () => {
+    player.src = portfolioData.spotify.embedUrl;
+    consent.style.display = "none";
+  });
+}
 
     function setupSpotifyResponsiveScale() {
       const bezel = document.querySelector("#win-music .spotify-bezel");
@@ -1194,6 +1206,7 @@ function renderData() {
     setupDreamCursor();
     setupPsychedelicDesktop();
     setupSpotifyResponsiveScale();
+    setupSpotifyConsent();
 
     // Abre uma janela inicial discreta.
     setTimeout(() => openWindow("about"), 450);
